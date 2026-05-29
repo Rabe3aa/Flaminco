@@ -30,7 +30,7 @@ const defaultContent: Record<string, string> = {
   "highlight.image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1364&auto=format&fit=crop",
 };
 
-const defaultTeam = [
+const defaultTeam: { name: string; role: string; bio: string | null; image: string; department: string }[] = [
   { name: "Shady Elahmady", role: "CEO", bio: null, image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1374&auto=format&fit=crop", department: "Leadership" },
   { name: "Alaa Ali", role: "Art Director", bio: null, image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1361&auto=format&fit=crop", department: "Design" },
   { name: "Mahmoud Khaled", role: "2D & 3D Designer", bio: null, image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1374&auto=format&fit=crop", department: "Design" },
