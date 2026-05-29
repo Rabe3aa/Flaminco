@@ -9,5 +9,5 @@ export default async function ProjectsPage() {
     getCategoriesForDisplay().catch(() => ["All"]),
   ]);
 
-  return <ProjectsClient projects={projects} categories={categories} />;
+  return <ProjectsClient projects={projects ?? []} categories={categories} />;
 }
