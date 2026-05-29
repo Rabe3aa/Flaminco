@@ -9,7 +9,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function BlogsPage() {
-  const blogs = await getBlogsForDisplay();
+  const blogs = await getBlogsForDisplay().catch(() => null);
 
   return (
     <main className="min-h-screen text-brand-neutral overflow-x-hidden font-sans relative z-0 bg-brand-bg pt-32">

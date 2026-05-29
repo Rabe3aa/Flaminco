@@ -5,8 +5,8 @@ export const dynamic = "force-dynamic";
 
 export default async function ProjectsPage() {
   const [projects, categories] = await Promise.all([
-    getProjectsForDisplay(),
-    getCategoriesForDisplay(),
+    getProjectsForDisplay().catch(() => null),
+    getCategoriesForDisplay().catch(() => ["All"]),
   ]);
 
   return <ProjectsClient projects={projects} categories={categories} />;

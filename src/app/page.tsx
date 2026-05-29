@@ -49,8 +49,8 @@ function pickSection(content: Record<string, string>, prefix: string): Record<st
 
 export default async function Home() {
   const [dbProjects, trustedCompanies, homeContent] = await Promise.all([
-    getFeaturedProjectsForDisplay(),
-    getPublishedTrustedCompanies(),
+    getFeaturedProjectsForDisplay().catch(() => null),
+    getPublishedTrustedCompanies().catch(() => []),
     getHomeContent().catch(() => ({})),
   ]);
   const projects = dbProjects || FALLBACK_PROJECTS;
