@@ -5,38 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import Link from "next/link";
 
-const projects = [
-  {
-    id: "01",
-    title: "Lumina",
-    category: "Brand Identity & Product Launch",
-    overview: "We partnered with Lumina to execute a comprehensive go-to-market strategy, redesigning their digital presence and driving a 300% increase in initial user acquisition.",
-    benefits: ["Complete Rebranding", "Performance Marketing", "Conversion Optimization"],
-  },
-  {
-    id: "02",
-    title: "NexGen",
-    category: "B2B Lead Generation",
-    overview: "Through highly targeted account-based marketing and technical SEO, we helped NexGen establish enterprise authority and fill their sales pipeline with high-value leads.",
-    benefits: ["Account-Based Marketing", "Technical SEO", "High-Value Lead Nurturing"],
-  },
-  {
-    id: "03",
-    title: "Aura",
-    category: "E-Commerce Scaling",
-    overview: "Aura needed to break through a revenue plateau. We implemented a rigorous creative testing matrix across paid social, resulting in a 45% reduction in CPA.",
-    benefits: ["Paid Social Strategy", "Creative Testing Matrix", "ROAS Scaling"],
-  },
-  {
-    id: "04",
-    title: "Echo",
-    category: "Organic Growth & Content",
-    overview: "By developing a robust, multi-channel content engine, we positioned Echo as the definitive voice in their niche, driving millions of organic impressions globally.",
-    benefits: ["Viral Content Engine", "Community Management", "Influencer Activation"],
-  }
-];
+type ProjectItem = {
+  id: string;
+  title: string;
+  category: string;
+  overview: string;
+  benefits: string[];
+};
 
-export function ProjectsSection() {
+export function ProjectsSection({ projects }: { projects: ProjectItem[] }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
 
   return (

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { LogIn } from "lucide-react";
 
 export function Footer() {
   return (
@@ -132,9 +133,13 @@ export function Footer() {
           <p className="text-sm text-white/60 text-center md:text-left">
             {new Date().getFullYear()} Flaminco. All rights reserved.
           </p>
-          <div className="flex gap-6 text-sm text-white/60">
+          <div className="flex items-center gap-6 text-sm text-white/60">
             <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/admin/login" className="hover:text-white transition-colors inline-flex items-center gap-1.5">
+              <LogIn size={13} />
+              Login
+            </Link>
           </div>
         </div>
       </div>

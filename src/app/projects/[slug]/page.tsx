@@ -1,169 +1,225 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  CheckCircle2,
+  Calendar,
+  User,
+  Tag,
+} from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AnimatedBackground } from "@/components/layout/animated-background";
-import { projects } from "@/data/projects";
+import { BlockRenderer } from "@/components/layout/block-renderer";
+import { GalleryCarousel } from "@/components/layout/gallery-carousel";
+import { getProjectBySlugForDisplay } from "@/lib/data";
+import type { Block } from "@/lib/page-builder/types";
+
+export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-  return projects.map((p) => ({
-    slug: p.slug,
-  }));
-}
-
 export default async function ProjectDetailPage({ params }: PageProps) {
-  // Await the params before accessing its properties.
-  // Next.js 15+ recommends treating `params` and `searchParams` as Promises in dynamic routes.
   const { slug } = await params;
-  
-  const project = projects.find((p) => p.slug === slug);
+  const project = await getProjectBySlugForDisplay(slug);
 
   if (!project) {
     notFound();
   }
 
+  const hasCustomLayout =
+    "layout" in project &&
+    Array.isArray(project.layout) &&
+    project.layout.length > 0;
+
+  const hasGallery = project.gallery.length > 0;
+  const hasDeliverables = project.services.length > 0;
+
   return (
     <main className="min-h-screen text-brand-neutral overflow-x-hidden font-sans relative z-0 bg-brand-bg pt-32">
       <AnimatedBackground />
       <Header />
-      
-      {/* Top Navigation */}
-      <div className="container mx-auto px-4 md:px-8 pt-8 relative z-10">
-        <Link 
-          href="/projects" 
-          className="inline-flex items-center gap-2 text-sm font-bold text-brand-primary hover:bg-brand-primary/10 px-4 py-2 rounded-full transition-colors"
-        >
-          <ArrowLeft size={16} />
-          Back to Projects
-        </Link>
-      </div>
 
-      {/* Hero Section */}
-      <section className="py-12 relative z-10">
+      {/* ── Hero Image ── */}
+      <section className="relative z-10 pt-6">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 text-brand-primary font-bold text-xs uppercase tracking-widest mb-6">
-              {project.category}
-            </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-brand-primary tracking-tighter mb-8 leading-[0.9]">
-              {project.title}
-            </h1>
-          </div>
+          {/* Back link */}
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-brand-primary hover:bg-brand-primary/10 px-4 py-2 rounded-full transition-colors mb-6"
+          >
+            <ArrowLeft size={16} />
+            All Projects
+          </Link>
 
-          <div className="flex flex-col md:flex-row gap-12 mt-12 pt-12 border-t border-brand-neutral/10">
-            <div className="flex-1">
-               <h3 className="text-sm font-bold text-brand-neutral uppercase tracking-widest mb-4">Client</h3>
-               <p className="text-xl font-medium text-brand-primary">{project.client}</p>
-            </div>
-            <div className="flex-1">
-               <h3 className="text-sm font-bold text-brand-neutral uppercase tracking-widest mb-4">Year</h3>
-               <p className="text-xl font-medium text-brand-primary">{project.year}</p>
-            </div>
-            <div className="flex-[2]">
-               <h3 className="text-sm font-bold text-brand-neutral uppercase tracking-widest mb-4">Services</h3>
-               <div className="flex flex-wrap gap-2">
-                 {project.services.map((service) => (
-                   <span key={service} className="px-3 py-1 rounded-full border border-brand-primary/20 text-brand-primary text-sm font-medium">
-                     {service}
-                   </span>
-                 ))}
-               </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          {/* Main image */}
+          <div className="relative w-full aspect-[21/9] md:aspect-[2.4/1] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl">
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-      {/* Main Image */}
-      <section className="py-12 relative z-10">
-         <div className="container mx-auto px-4 md:px-8">
-            <div className="w-full h-[60vh] md:h-[80vh] relative rounded-[3rem] overflow-hidden shadow-2xl">
-              <Image 
-                src={project.image} 
-                alt={project.title} 
-                fill 
-                className="object-cover"
-                priority
-              />
-            </div>
-         </div>
-      </section>
-
-      {/* Overview & Content */}
-      <section className="py-20 relative z-10 bg-white border-y border-brand-neutral/10">
-        <div className="container mx-auto px-4 md:px-8">
-           <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-black text-brand-primary mb-6 tracking-tight">
-                Project Overview
-              </h2>
-              <p className="text-lg md:text-xl leading-relaxed text-brand-neutral/90 mb-12">
-                {project.fullDescription}
-              </p>
-
-              <div className="bg-brand-bg rounded-[2.5rem] p-8 md:p-12 border border-brand-neutral/10">
-                <h3 className="text-2xl font-bold text-brand-primary mb-6 tracking-tight">Key Deliverables</h3>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {project.services.map((service, i) => (
-                    <li key={i} className="flex items-center gap-3 text-brand-neutral">
-                      <CheckCircle2 size={20} className="text-[#0072BB] shrink-0" />
-                      <span className="font-medium">{service}</span>
-                    </li>
-                  ))}
-                  <li className="flex items-center gap-3 text-brand-neutral">
-                      <CheckCircle2 size={20} className="text-[#0072BB] shrink-0" />
-                      <span className="font-medium">Performance Tracking</span>
-                  </li>
-                  <li className="flex items-center gap-3 text-brand-neutral">
-                      <CheckCircle2 size={20} className="text-[#0072BB] shrink-0" />
-                      <span className="font-medium">Strategic Roadmap</span>
-                  </li>
-                </ul>
+            {/* Overlay content */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-14">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider border border-white/20 mb-4">
+                <Tag size={12} />
+                {project.category}
               </div>
-           </div>
-        </div>
-      </section>
-
-      {/* Image Gallery */}
-      <section className="py-24 relative z-10">
-        <div className="container mx-auto px-4 md:px-8">
-          <h2 className="text-3xl font-black text-brand-primary mb-12 tracking-tight text-center">
-            Gallery
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             {project.gallery.map((img, index) => (
-               <div key={index} className={`relative w-full rounded-[2.5rem] overflow-hidden shadow-lg aspect-square ${index === 0 && project.gallery.length % 2 !== 0 ? 'md:col-span-2 aspect-[21/9]' : ''}`}>
-                 <Image 
-                   src={img} 
-                   alt={`${project.title} gallery image ${index + 1}`}
-                   fill
-                   className="object-cover hover:scale-105 transition-transform duration-700"
-                 />
-               </div>
-             ))}
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter leading-[0.95] max-w-4xl">
+                {project.title}
+              </h1>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Footer */}
-      <section className="pb-32 pt-12 relative z-10">
-        <div className="container mx-auto px-4 md:px-8 text-center">
-           <h2 className="text-4xl md:text-6xl font-black text-brand-primary tracking-tighter mb-8">
-             Have a similar project?
-           </h2>
-           <Link 
-             href="/contact"
-             className="inline-flex items-center justify-center rounded-full pl-8 pr-2 py-2 h-auto bg-brand-primary hover:bg-[#0065A6] text-white font-bold shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all group gap-4 text-lg"
-           >
-             <span>Let&apos;s talk</span>
-             <div className="bg-white text-brand-primary w-12 h-12 rounded-full flex items-center justify-center group-hover:bg-brand-bg transition-colors">
-               <ArrowLeft size={20} className="rotate-135 group-hover:rotate-180 transition-transform duration-300" />
-             </div>
-           </Link>
+      {/* ── Project Info Strip ── */}
+      <section className="relative z-10 py-8">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="flex flex-wrap items-stretch gap-4 md:gap-0 md:divide-x md:divide-brand-neutral/10 bg-white rounded-2xl shadow-sm border border-brand-neutral/5 p-1">
+            {project.client && (
+              <div className="flex items-center gap-3 px-6 py-4 flex-1 min-w-[180px]">
+                <div className="w-10 h-10 rounded-xl bg-brand-primary/5 flex items-center justify-center shrink-0">
+                  <User size={18} className="text-brand-primary" />
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold text-brand-neutral/40 uppercase tracking-widest">Client</p>
+                  <p className="text-sm font-semibold text-brand-primary">{project.client}</p>
+                </div>
+              </div>
+            )}
+            {project.year && (
+              <div className="flex items-center gap-3 px-6 py-4 flex-1 min-w-[180px]">
+                <div className="w-10 h-10 rounded-xl bg-brand-primary/5 flex items-center justify-center shrink-0">
+                  <Calendar size={18} className="text-brand-primary" />
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold text-brand-neutral/40 uppercase tracking-widest">Year</p>
+                  <p className="text-sm font-semibold text-brand-primary">{project.year}</p>
+                </div>
+              </div>
+            )}
+            <div className="flex items-center gap-3 px-6 py-4 flex-1 min-w-[180px]">
+              <div className="w-10 h-10 rounded-xl bg-brand-primary/5 flex items-center justify-center shrink-0">
+                <Tag size={18} className="text-brand-primary" />
+              </div>
+              <div>
+                <p className="text-[11px] font-bold text-brand-neutral/40 uppercase tracking-widest">Category</p>
+                <p className="text-sm font-semibold text-brand-primary">{project.category}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Custom Layout OR Default Content ── */}
+      {hasCustomLayout ? (
+        <section className="relative z-10 py-8">
+          <BlockRenderer blocks={project.layout as Block[]} />
+        </section>
+      ) : (
+        <>
+          {/* ── Overview + Deliverables ── */}
+          <section className="relative z-10 py-8 md:py-16">
+            <div className="container mx-auto px-4 md:px-8">
+              <div className={`grid gap-10 ${hasDeliverables ? "lg:grid-cols-5" : "lg:grid-cols-1 max-w-4xl mx-auto"}`}>
+                {/* Description */}
+                <div className={hasDeliverables ? "lg:col-span-3" : ""}>
+                  <h2 className="text-sm font-bold text-brand-neutral/40 uppercase tracking-[0.2em] mb-4">
+                    About this project
+                  </h2>
+                  <div className="bg-white rounded-2xl border border-brand-neutral/5 shadow-sm p-8 md:p-10">
+                    <p className="text-base md:text-lg leading-relaxed text-brand-neutral/80 whitespace-pre-line">
+                      {project.fullDescription}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Key Deliverables */}
+                {hasDeliverables && (
+                  <div className="lg:col-span-2">
+                    <h2 className="text-sm font-bold text-brand-neutral/40 uppercase tracking-[0.2em] mb-4">
+                      Key Deliverables
+                    </h2>
+                    <div className="bg-white rounded-2xl border border-brand-neutral/5 shadow-sm p-8 md:p-10">
+                      <ul className="space-y-4">
+                        {project.services.map((service, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <div className="w-6 h-6 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <CheckCircle2 size={14} className="text-brand-primary" />
+                            </div>
+                            <span className="text-brand-neutral/80 font-medium leading-snug">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* ── Gallery ── */}
+          {hasGallery && (
+            <section className="relative z-10 py-8 md:py-16">
+              <div className="container mx-auto px-4 md:px-8">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="h-px flex-1 bg-brand-neutral/10" />
+                  <h2 className="text-sm font-bold text-brand-neutral/40 uppercase tracking-[0.2em]">
+                    Project Gallery
+                  </h2>
+                  <div className="h-px flex-1 bg-brand-neutral/10" />
+                </div>
+
+                <GalleryCarousel images={project.gallery} title={project.title} />
+              </div>
+            </section>
+          )}
+        </>
+      )}
+
+      {/* ── CTA Banner ── */}
+      <section className="pb-24 pt-8 relative z-10">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="bg-brand-primary rounded-[2.5rem] p-12 md:p-20 relative overflow-hidden shadow-2xl">
+            <div className="absolute inset-0 opacity-[0.07] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:24px_24px]" />
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="text-center md:text-left">
+                <h2 className="text-3xl md:text-4xl font-black text-white tracking-tighter mb-3">
+                  Have a similar project in mind?
+                </h2>
+                <p className="text-white/60 text-lg font-light">
+                  Let&apos;s bring your vision to life with our expertise.
+                </p>
+              </div>
+              <div className="flex gap-4 shrink-0">
+                <Link
+                  href="/projects"
+                  className="inline-flex items-center gap-2 rounded-full px-6 py-3 bg-white/10 text-white font-semibold border border-white/20 hover:bg-white/20 transition-all"
+                >
+                  <ArrowLeft size={16} />
+                  More projects
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex rounded-full pl-6 pr-2 py-2 bg-white hover:bg-brand-bg text-brand-primary font-bold shadow-xl hover:scale-105 transition-all group items-center gap-3"
+                >
+                  <span>Let&apos;s talk</span>
+                  <div className="bg-brand-primary text-white w-9 h-9 rounded-full flex items-center justify-center group-hover:bg-[#0F172A] transition-colors">
+                    <ArrowUpRight size={16} />
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

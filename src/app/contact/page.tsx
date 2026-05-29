@@ -41,7 +41,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <p className="text-xs text-white/60 uppercase tracking-widest font-bold mb-1">Email Us</p>
-                        <p className="text-lg font-medium">hello@flaminco.com</p>
+                        <p className="text-lg font-medium">hello@flaminco.agency</p>
                       </div>
                     </div>
                     

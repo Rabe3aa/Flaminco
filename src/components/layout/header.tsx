@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -77,22 +77,32 @@ export function Header() {
           })}
         </nav>
 
-        {/* CTA Button - Apple Style */}
-        <div className="hidden md:block relative group/btn">
-          {/* Glowing animated background */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary via-[#00A3FF] to-brand-primary rounded-full blur opacity-30 group-hover/btn:opacity-60 transition duration-1000 animate-pulse"></div>
-          
-          <Link 
-            href="https://wa.me/201062120949"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="relative inline-flex rounded-full pl-6 pr-2 py-2 h-auto bg-white hover:bg-brand-bg text-brand-primary font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all group border border-brand-neutral/20 items-center gap-4"
+        {/* CTA Button + Login */}
+        <div className="hidden md:flex items-center gap-3">
+          <Link
+            href="/admin/login"
+            className="w-9 h-9 rounded-full bg-brand-primary/10 hover:bg-brand-primary/20 flex items-center justify-center text-brand-primary hover:scale-110 transition-all"
+            title="Admin Login"
           >
-            <span>Chat With Us</span>
-            <div className="bg-brand-primary text-white w-8 h-8 rounded-full flex items-center justify-center group-hover:bg-[#0F172A] transition-colors">
-              <ArrowRight size={16} />
-            </div>
+            <LogIn size={16} />
           </Link>
+
+          <div className="relative group/btn">
+            {/* Glowing animated background */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary via-[#00A3FF] to-brand-primary rounded-full blur opacity-30 group-hover/btn:opacity-60 transition duration-1000 animate-pulse"></div>
+            
+            <Link 
+              href="https://wa.me/201062120949"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative inline-flex rounded-full pl-6 pr-2 py-2 h-auto bg-white hover:bg-brand-bg text-brand-primary font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all group border border-brand-neutral/20 items-center gap-4"
+            >
+              <span>Chat With Us</span>
+              <div className="bg-brand-primary text-white w-8 h-8 rounded-full flex items-center justify-center group-hover:bg-[#0F172A] transition-colors">
+                <ArrowRight size={16} />
+              </div>
+            </Link>
+          </div>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -122,7 +132,15 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
-              <div className="relative group/btn mt-4 w-full">
+              <Link
+                href="/admin/login"
+                className="flex items-center gap-2 text-sm font-medium text-brand-neutral/60 hover:text-brand-primary py-2 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <LogIn size={14} />
+                Admin Login
+              </Link>
+              <div className="relative group/btn mt-2 w-full">
                 {/* Glowing animated background */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary via-[#00A3FF] to-brand-primary rounded-full blur opacity-30 group-hover/btn:opacity-60 transition duration-1000 animate-pulse"></div>
                 
