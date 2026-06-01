@@ -4,7 +4,7 @@ import { AnimatedBackground } from "@/components/layout/animated-background";
 import { getAboutContent, getTeamMembers, getJourneyMilestones } from "@/lib/actions/about";
 import { TeamSection } from "@/components/layout/team-section";
 import Image from "next/image";
-import { Award, TrendingUp } from "lucide-react";
+import { Award, TrendingUp, Star } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -22,12 +22,23 @@ const defaultContent: Record<string, string> = {
   "journey.subtitle": "A timeline of our growth and evolution.",
   "team.heading": "The minds behind the magic.",
   "team.subtitle": "Meet our leadership and core departmental heads.",
-  "highlight.badge": "Quarterly Achiever",
-  "highlight.name": "Meet Alex Rivera",
-  "highlight.role": "Senior Data Analyst",
-  "highlight.description": "Alex has been instrumental in optimizing our client bidding algorithms this quarter.",
-  "highlight.stat": "+40% Performance Increase",
-  "highlight.image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1364&auto=format&fit=crop",
+  "highlight.badge": "Quarterly Achievers",
+  "highlight.heading": "Team Stars This Quarter",
+  "highlight.member1.name": "Alex Rivera",
+  "highlight.member1.role": "Senior Data Analyst",
+  "highlight.member1.description": "Alex has been instrumental in optimizing our client bidding algorithms this quarter.",
+  "highlight.member1.stat": "+40% Performance",
+  "highlight.member1.image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1364&auto=format&fit=crop",
+  "highlight.member2.name": "",
+  "highlight.member2.role": "",
+  "highlight.member2.description": "",
+  "highlight.member2.stat": "",
+  "highlight.member2.image": "",
+  "highlight.member3.name": "",
+  "highlight.member3.role": "",
+  "highlight.member3.description": "",
+  "highlight.member3.stat": "",
+  "highlight.member3.image": "",
 };
 
 const defaultTeam: { name: string; role: string; bio: string | null; image: string; department: string }[] = [
@@ -93,7 +104,7 @@ export default async function AboutPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 text-brand-primary font-bold text-xs uppercase tracking-widest mb-6">
               {c["hero.badge"]}
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-brand-primary tracking-tighter mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-brand-primary tracking-tighter mb-6 leading-tight">
               {c["hero.heading"]}
             </h1>
             <p className="text-xl text-brand-neutral/80 font-light">
@@ -138,7 +149,7 @@ export default async function AboutPage() {
       <section className="py-24 bg-white relative z-10 border-y border-brand-neutral/10">
         <div className="container mx-auto px-4 md:px-8">
           <div className="max-w-4xl mx-auto text-center mb-16">
-             <h2 className="text-4xl md:text-5xl font-black text-brand-primary tracking-tight mb-4">{c["journey.heading"]}</h2>
+             <h2 className="text-3xl md:text-5xl font-black text-brand-primary tracking-tight mb-4">{c["journey.heading"]}</h2>
              <p className="text-brand-neutral font-light text-lg">{c["journey.subtitle"]}</p>
           </div>
 
@@ -188,42 +199,71 @@ export default async function AboutPage() {
          </div>
       </section>
 
-      {/* Best Employee Highlight Section */}
+      {/* Employee Highlight Section */}
       <section className="pb-32 relative z-10">
         <div className="container mx-auto px-4 md:px-8">
-           <div className="bg-brand-primary rounded-[3rem] p-8 md:p-16 overflow-hidden relative shadow-2xl flex flex-col md:flex-row items-center gap-12">
-             {/* Background Pattern */}
-             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:24px_24px]" />
-             
-             {/* Image */}
-             <div className="relative w-full md:w-1/3 aspect-square rounded-full border-4 border-white/20 overflow-hidden shadow-2xl z-10">
-               <Image 
-                 src={c["highlight.image"]}
-                 alt={c["highlight.name"]}
-                 fill
-                 className="object-cover"
-               />
-             </div>
+          <div className="bg-brand-primary rounded-[3rem] p-8 md:p-16 overflow-hidden relative shadow-2xl">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:24px_24px]" />
 
-             {/* Content */}
-             <div className="relative z-10 flex-1 text-white text-center md:text-left">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFB800]/20 border border-[#FFB800]/40 text-[#FFB800] font-bold text-xs uppercase tracking-widest mb-6">
-                  <Award size={14} />
-                  {c["highlight.badge"]}
-                </div>
-                <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">{c["highlight.name"]}</h2>
-                <h4 className="text-xl text-white/80 font-medium mb-6">{c["highlight.role"]}</h4>
-                <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-2xl font-light">
-                  {c["highlight.description"]}
-                </p>
-                <div className="flex items-center gap-3 justify-center md:justify-start">
-                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                    <TrendingUp size={20} className="text-white" />
+            {/* Section Header */}
+            <div className="relative z-10 text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFB800]/20 border border-[#FFB800]/40 text-[#FFB800] font-bold text-xs uppercase tracking-widest mb-6">
+                <Award size={14} />
+                {c["highlight.badge"]}
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+                {c["highlight.heading"]}
+              </h2>
+            </div>
+
+            {/* Member Cards */}
+            <div className={`relative z-10 grid gap-6 ${
+              [2, 3].filter((n) => c[`highlight.member${n}.name`]).length === 0
+                ? "grid-cols-1 max-w-sm mx-auto"
+                : [2, 3].filter((n) => c[`highlight.member${n}.name`]).length === 1
+                ? "grid-cols-1 md:grid-cols-2 max-w-2xl mx-auto"
+                : "grid-cols-1 md:grid-cols-3"
+            }`}>
+              {([1, 2, 3] as const).map((n) => {
+                const name = c[`highlight.member${n}.name`];
+                if (!name) return null;
+                const role = c[`highlight.member${n}.role`];
+                const description = c[`highlight.member${n}.description`];
+                const stat = c[`highlight.member${n}.stat`];
+                const image = c[`highlight.member${n}.image`];
+                return (
+                  <div key={n} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 md:p-8 flex flex-col items-center text-center gap-5">
+                    {/* Photo */}
+                    <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white/20 overflow-hidden shadow-xl shrink-0">
+                      {image ? (
+                        <Image src={image} alt={name} fill className="object-cover" unoptimized />
+                      ) : (
+                        <div className="w-full h-full bg-white/20 flex items-center justify-center">
+                          <Star size={32} className="text-white/50" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1">
+                      <h3 className="text-xl font-black text-white mb-1">{name}</h3>
+                      <p className="text-white/70 font-medium text-sm mb-4">{role}</p>
+                      {description && (
+                        <p className="text-white/60 text-sm leading-relaxed mb-5">{description}</p>
+                      )}
+                      {stat && (
+                        <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5">
+                          <TrendingUp size={14} className="text-[#FFB800]" />
+                          <span className="font-bold text-white text-sm">{stat}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <span className="font-bold">{c["highlight.stat"]}</span>
-                </div>
-             </div>
-           </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </section>
 

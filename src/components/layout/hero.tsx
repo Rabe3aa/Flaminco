@@ -36,9 +36,9 @@ export function Hero({ content = {} }: { content?: HeroContent }) {
   const c = { ...DEFAULTS, ...Object.fromEntries(Object.entries(content).filter(([, v]) => v)) };
 
   return (
-    <section className="relative pt-32 pb-20 overflow-visible">
+    <section className="relative pt-32 pb-20 overflow-hidden">
       <div className="container mx-auto px-4 md:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
 
           {/* Left Content (Spans 5 columns) */}
           <div className="lg:col-span-5 max-w-2xl relative z-20">
@@ -98,11 +98,11 @@ export function Hero({ content = {} }: { content?: HeroContent }) {
           </div>
 
           {/* Right Content - Modern Image & Glass Card (Spans 7 columns) */}
-          <div className="lg:col-span-7 relative h-[600px] lg:h-[800px] w-full">
+          <div className="lg:col-span-7 relative h-[400px] md:h-[550px] lg:h-[800px] w-full">
 
             {/* Main Image Layer */}
             <motion.div
-              className="absolute right-0 top-10 w-[85%] h-[85%] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-brand-neutral/10 z-0"
+              className="absolute right-0 top-0 lg:top-10 w-full lg:w-[85%] h-full lg:h-[85%] rounded-[2rem] lg:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-brand-neutral/10 z-0"
               initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
               transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
@@ -117,9 +117,9 @@ export function Hero({ content = {} }: { content?: HeroContent }) {
               />
             </motion.div>
 
-            {/* Glass Floating Review Card - Enlarged */}
+            {/* Glass Floating Review Card */}
             <motion.div
-              className="absolute left-0 lg:-left-[5%] top-[20%] z-30 w-80 md:w-96"
+              className="hidden lg:block absolute left-0 lg:-left-[5%] top-[20%] z-30 w-80 md:w-96"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ type: "spring", stiffness: 100, delay: 0.6 }}

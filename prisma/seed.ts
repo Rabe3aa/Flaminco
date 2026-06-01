@@ -8,6 +8,10 @@ const adapter = new PrismaNeon({
 });
 const prisma = new PrismaClient({ adapter });
 
+function slugify(text: string): string {
+  return text.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim();
+}
+
 async function main() {
   const username = process.env.ADMIN_USERNAME || "admin";
   const password = process.env.ADMIN_PASSWORD || "Flaminco@2024!";
@@ -17,14 +21,31 @@ async function main() {
   await prisma.user.upsert({
     where: { username },
     update: { password: hashedPassword },
-    create: {
-      username,
-      password: hashedPassword,
-      role: "admin",
-    },
+    create: { username, password: hashedPassword, role: "admin" },
   });
 
   console.log(`Admin user '${username}' created/updated.`);
+
+  // Seed categories
+  const categoryNames = [
+    "Corporate Gifts",
+    "Promotional Materials",
+    "Events Giveaways",
+    "Booths, Pop-ups & Roll-ups",
+    "Advertising designs, prints & Vip business gifts",
+    "Personalized Logo Printing",
+  ];
+
+  for (let i = 0; i < categoryNames.length; i++) {
+    const name = categoryNames[i];
+    await prisma.category.upsert({
+      where: { name },
+      update: {},
+      create: { name, slug: slugify(name), order: i },
+    });
+  }
+
+  console.log(`${categoryNames.length} categories seeded.`);
 
   // Seed services
   const services = [
@@ -40,11 +61,7 @@ async function main() {
     await prisma.service.upsert({
       where: { id: service.title.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-") },
       update: service,
-      create: {
-        ...service,
-        images: [],
-        published: true,
-      },
+      create: { ...service, images: [], published: true },
     });
   }
 
@@ -101,30 +118,6 @@ async function main() {
   }
 
   console.log(`${projects.length} sample projects seeded.`);
-
-  // Seed page content
-  const content = [
-    { page: "home", section: "hero", key: "title", value: "We Create Brands That Stand Out", type: "text" },
-    { page: "home", section: "hero", key: "subtitle", value: "Flaminco is a full-service marketing agency specializing in corporate gifts, promotional materials, and brand experiences.", type: "text" },
-    { page: "about", section: "hero", key: "title", value: "About Flaminco", type: "text" },
-    { page: "about", section: "hero", key: "description", value: "We are a passionate team of creative professionals dedicated to delivering exceptional marketing solutions.", type: "text" },
-    { page: "contact", section: "info", key: "egypt_address", value: "Plot No. 7995, Al Jazzera Higher Institute, Street 9, Mukattam, Cairo, Egypt", type: "text" },
-    { page: "contact", section: "info", key: "egypt_phone", value: "+201062120949", type: "text" },
-    { page: "contact", section: "info", key: "ksa_address", value: "7327, Prince Abdul Majeed bin Abdulaziz Street, Al-Duwaima, Al Madinah Al Munawwarah, Saudi Arabia", type: "text" },
-    { page: "contact", section: "info", key: "ksa_phone", value: "+966543772563", type: "text" },
-    { page: "footer", section: "contact", key: "egypt_address", value: "Plot No. 7995, Al Jazzera Higher Institute, Street 9, Mukattam, Cairo, Egypt", type: "text" },
-    { page: "footer", section: "contact", key: "ksa_address", value: "7327, Prince Abdul Majeed bin Abdulaziz Street, Al-Duwaima, Al Madinah Al Munawwarah, Saudi Arabia", type: "text" },
-  ];
-
-  for (const item of content) {
-    await prisma.pageContent.upsert({
-      where: { page_section_key: { page: item.page, section: item.section, key: item.key } },
-      update: { value: item.value, type: item.type },
-      create: item,
-    });
-  }
-
-  console.log(`${content.length} content items seeded.`);
 
   console.log("\nSeed completed successfully!");
 }

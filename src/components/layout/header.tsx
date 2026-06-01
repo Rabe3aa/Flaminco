@@ -78,7 +78,7 @@ export function Header() {
         </nav>
 
         {/* CTA Button + Login */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/admin/login"
             className="w-9 h-9 rounded-full bg-brand-primary/10 hover:bg-brand-primary/20 flex items-center justify-center text-brand-primary hover:scale-110 transition-all"
@@ -107,7 +107,7 @@ export function Header() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden z-50 p-2 text-brand-primary"
+          className="lg:hidden z-50 p-2 text-brand-primary"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

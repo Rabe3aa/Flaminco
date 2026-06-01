@@ -63,12 +63,13 @@ export function ProjectEditTabs({
         </button>
       </div>
 
-      {/* Tab content */}
-      {activeTab === "details" ? (
+      {/* Tab content - use display:none to preserve PageBuilder state */}
+      <div style={{ display: activeTab === "details" ? "block" : "none" }}>
         <ProjectForm initialData={initialData} action={action} categories={categories} />
-      ) : (
+      </div>
+      <div style={{ display: activeTab === "layout" ? "block" : "none" }}>
         <PageBuilder projectId={projectId} initialBlocks={initialBlocks} />
-      )}
+      </div>
     </div>
   );
 }

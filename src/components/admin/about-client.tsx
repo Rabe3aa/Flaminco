@@ -428,14 +428,26 @@ function TeamSection({
 }
 
 function HighlightSection({ content, updateField }: { content: Record<string, string>; updateField: (k: string, v: string) => void }) {
+  const members = [1, 2, 3] as const;
   return (
     <>
-      <FieldInput label="Badge Text" value={content["highlight.badge"]} onChange={(v) => updateField("highlight.badge", v)} placeholder="Quarterly Achiever" />
-      <FieldInput label="Name / Heading" value={content["highlight.name"]} onChange={(v) => updateField("highlight.name", v)} placeholder="Meet Alex Rivera" />
-      <FieldInput label="Role" value={content["highlight.role"]} onChange={(v) => updateField("highlight.role", v)} placeholder="Senior Data Analyst" />
-      <FieldInput label="Description" value={content["highlight.description"]} onChange={(v) => updateField("highlight.description", v)} multiline />
-      <FieldInput label="Stat Text" value={content["highlight.stat"]} onChange={(v) => updateField("highlight.stat", v)} placeholder="+40% Performance Increase" />
-      <ImageField label="Highlight Image" value={content["highlight.image"]} onChange={(v) => updateField("highlight.image", v)} />
+      <FieldInput label="Badge Text" value={content["highlight.badge"]} onChange={(v) => updateField("highlight.badge", v)} placeholder="Quarterly Achievers" />
+      <FieldInput label="Section Heading" value={content["highlight.heading"]} onChange={(v) => updateField("highlight.heading", v)} placeholder="Team Stars This Quarter" />
+
+      <div className="mt-4 space-y-6">
+        {members.map((n) => (
+          <div key={n} className="bg-white/[0.03] border border-white/10 rounded-xl p-4 space-y-3">
+            <p className="text-xs font-semibold text-[#0072BB] uppercase tracking-widest">Member {n}</p>
+            <div className="grid grid-cols-2 gap-3">
+              <FieldInput label="Name" value={content[`highlight.member${n}.name`]} onChange={(v) => updateField(`highlight.member${n}.name`, v)} placeholder="Alex Rivera" />
+              <FieldInput label="Role" value={content[`highlight.member${n}.role`]} onChange={(v) => updateField(`highlight.member${n}.role`, v)} placeholder="Senior Data Analyst" />
+            </div>
+            <FieldInput label="Achievement / Stat" value={content[`highlight.member${n}.stat`]} onChange={(v) => updateField(`highlight.member${n}.stat`, v)} placeholder="+40% Performance" />
+            <FieldInput label="Description" value={content[`highlight.member${n}.description`]} onChange={(v) => updateField(`highlight.member${n}.description`, v)} multiline placeholder="Short description..." />
+            <ImageField label="Photo" value={content[`highlight.member${n}.image`]} onChange={(v) => updateField(`highlight.member${n}.image`, v)} />
+          </div>
+        ))}
+      </div>
     </>
   );
 }

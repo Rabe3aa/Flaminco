@@ -31,7 +31,7 @@ export default async function ServicesPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 text-brand-primary font-bold text-xs uppercase tracking-widest mb-6">
             Our Expertise
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-brand-primary tracking-tighter mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-brand-primary tracking-tighter mb-6 leading-tight">
             Premium printing & corporate branding.
           </h1>
           <p className="text-xl text-brand-neutral/80 font-light max-w-2xl mx-auto">
@@ -50,7 +50,7 @@ export default async function ServicesPage() {
       {/* CTA Section */}
       <section className="py-32 relative z-10">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="bg-brand-primary rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
+          <div className="bg-brand-primary rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 lg:p-20 text-center relative overflow-hidden shadow-2xl">
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:24px_24px]" />
             <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
               <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-6">
