@@ -123,26 +123,31 @@ export async function updateProject(id: string, formData: FormData) {
   const tags = tagsRaw
     ? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
     : [];
-  const images = imagesRaw
+
+  // Only update images if the field contains actual URLs — preserve existing gallery otherwise
+  const parsedImages = imagesRaw
     ? imagesRaw.split("\n").map((i) => i.trim()).filter(Boolean)
-    : [];
+    : null;
+
+  const updateData: Record<string, unknown> = {
+    title,
+    slug,
+    description,
+    category,
+    client,
+    year,
+    tags,
+    thumbnail,
+    featured,
+    published,
+    order,
+  };
+
+  if (parsedImages !== null) updateData.images = parsedImages;
 
   await prisma.project.update({
     where: { id },
-    data: {
-      title,
-      slug,
-      description,
-      category,
-      client,
-      year,
-      tags,
-      images,
-      thumbnail,
-      featured,
-      published,
-      order,
-    },
+    data: updateData,
   });
 
   revalidatePath("/");

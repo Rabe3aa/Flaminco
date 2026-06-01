@@ -59,12 +59,8 @@ export function ProjectForm({
   const [thumbnailUrls, setThumbnailUrls] = useState<string[]>(
     defaults.thumbnail ? [defaults.thumbnail] : []
   );
-  const [galleryUrls, setGalleryUrls] = useState<string[]>(
-    defaults.images ? defaults.images.split("\n").filter(Boolean) : []
-  );
 
   const thumbnailRef = useRef<HTMLInputElement>(null);
-  const imagesRef = useRef<HTMLTextAreaElement>(null);
 
   return (
     <form
@@ -161,35 +157,23 @@ export function ProjectForm({
           </div>
 
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-5">
-            <h2 className="text-lg font-semibold text-white">Images</h2>
+            <h2 className="text-lg font-semibold text-white">Thumbnail</h2>
+            <p className="text-xs text-gray-500">Gallery images are managed in the Page Layout tab.</p>
 
-            {/* Hidden inputs to send data via FormData */}
             <input
               ref={thumbnailRef}
               type="hidden"
               name="thumbnail"
               value={thumbnailUrls[0] || ""}
             />
-            <textarea
-              ref={imagesRef}
-              name="images"
-              value={galleryUrls.join("\n")}
-              readOnly
-              className="hidden"
-            />
+            {/* Keep images field empty so existing gallery data is preserved */}
+            <input type="hidden" name="images" value="" />
 
             <ImageUploader
-              label="Thumbnail"
+              label="Thumbnail Image"
               value={thumbnailUrls}
               onChange={(urls) => setThumbnailUrls(urls)}
               multiple={false}
-            />
-
-            <ImageUploader
-              label="Gallery Images"
-              value={galleryUrls}
-              onChange={(urls) => setGalleryUrls(urls)}
-              multiple={true}
             />
           </div>
         </div>
