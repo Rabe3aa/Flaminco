@@ -3,13 +3,14 @@ import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
   host: "smtpout.secureserver.net",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
+    type: "LOGIN",
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
-  authMethod: "LOGIN",
 });
 
 export async function POST(request: NextRequest) {
