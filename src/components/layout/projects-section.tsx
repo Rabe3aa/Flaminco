@@ -29,7 +29,7 @@ export function ProjectsSection({ projects }: { projects: ProjectItem[] }) {
             >
               Selected Work
             </motion.div>
-             <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4 flex items-center gap-4">
+             <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-4 flex items-center gap-3 md:gap-4 flex-wrap">
                 Featured Projects
                 <motion.div
                   animate={{ 
@@ -81,11 +81,11 @@ export function ProjectsSection({ projects }: { projects: ProjectItem[] }) {
             >
               <div className="container mx-auto px-4 md:px-8 pt-4 md:pt-6 h-full flex flex-col">
                  {/* Massive Title */}
-                 <h3 
-                   className="font-black tracking-tighter text-brand-bg m-0 transition-opacity duration-500"
-                   style={{ 
-                     fontSize: "clamp(6rem, 14vw, 16rem)", 
-                     lineHeight: 0.75, // Extremely tight to keep it pinned to the top
+                 <h3
+                   className="font-black tracking-tighter text-brand-bg m-0 transition-opacity duration-500 break-words hyphens-auto"
+                   style={{
+                     fontSize: "clamp(2.75rem, 13vw, 16rem)",
+                     lineHeight: 0.8, // Tight to keep it pinned to the top
                      opacity: isActive ? 1 : 0.7,
                      transform: "translateY(-2%)" // Slight bump up
                    }}

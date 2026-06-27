@@ -27,7 +27,8 @@ export function ContentTable({ items }: { items: ContentItem[] }) {
   }
 
   return (
-    <table className="w-full">
+    <div className="overflow-x-auto">
+    <table className="w-full min-w-[640px]">
       <thead>
         <tr className="border-b border-white/5">
           <th className="text-left text-gray-400 text-xs font-medium uppercase tracking-wider px-6 py-3">Section</th>
@@ -76,5 +77,6 @@ export function ContentTable({ items }: { items: ContentItem[] }) {
         ))}
       </tbody>
     </table>
+    </div>
   );
 }

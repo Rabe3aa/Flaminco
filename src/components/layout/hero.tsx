@@ -53,7 +53,7 @@ export function Hero({ content = {} }: { content?: HeroContent }) {
             </motion.div>
 
             <motion.h1
-              className="text-5xl md:text-6xl lg:text-7xl font-black text-brand-primary leading-[1.05] mb-6 tracking-tighter"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-brand-primary leading-[1.05] mb-6 tracking-tighter"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
@@ -98,7 +98,7 @@ export function Hero({ content = {} }: { content?: HeroContent }) {
           </div>
 
           {/* Right Content - Modern Image & Glass Card (Spans 7 columns) */}
-          <div className="lg:col-span-7 relative h-[400px] md:h-[550px] lg:h-[800px] w-full">
+          <div className="lg:col-span-7 relative h-[320px] sm:h-[420px] md:h-[550px] lg:h-[800px] w-full">
 
             {/* Main Image Layer */}
             <motion.div

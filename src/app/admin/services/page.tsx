@@ -8,14 +8,14 @@ export default async function AdminServicesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold text-white">Services</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Services</h1>
           <p className="text-gray-400 mt-1">{services.length} total services</p>
         </div>
         <Link
           href="/admin/services/new"
-          className="flex items-center gap-2 bg-[#0072BB] hover:bg-[#005a94] text-white px-4 py-2.5 rounded-xl font-medium transition-colors"
+          className="flex items-center gap-2 bg-[#0072BB] hover:bg-[#005a94] text-white px-4 py-2.5 rounded-xl font-medium transition-colors shrink-0"
         >
           <Plus className="w-4 h-4" />
           New Service
@@ -28,7 +28,8 @@ export default async function AdminServicesPage() {
             <p className="text-gray-500">No services yet. Create your first service.</p>
           </div>
         ) : (
-          <table className="w-full">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr className="border-b border-white/10">
                 <th className="text-left text-gray-400 text-xs font-medium uppercase tracking-wider px-6 py-4">Service</th>
@@ -78,6 +79,7 @@ export default async function AdminServicesPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

@@ -8,14 +8,14 @@ export default async function AdminBlogsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold text-white">Blogs</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Blogs</h1>
           <p className="text-gray-400 mt-1">{blogs.length} total posts</p>
         </div>
         <Link
           href="/admin/blogs/new"
-          className="flex items-center gap-2 bg-[#0072BB] hover:bg-[#005a94] text-white px-4 py-2.5 rounded-xl font-medium transition-colors"
+          className="flex items-center gap-2 bg-[#0072BB] hover:bg-[#005a94] text-white px-4 py-2.5 rounded-xl font-medium transition-colors shrink-0"
         >
           <Plus className="w-4 h-4" />
           New Blog
@@ -28,7 +28,8 @@ export default async function AdminBlogsPage() {
             <p className="text-gray-500">No blog posts yet. Create your first blog.</p>
           </div>
         ) : (
-          <table className="w-full">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr className="border-b border-white/10">
                 <th className="text-left text-gray-400 text-xs font-medium uppercase tracking-wider px-6 py-4">Title</th>
@@ -78,6 +79,7 @@ export default async function AdminBlogsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>
