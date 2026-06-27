@@ -1,8 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Star, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -42,39 +39,29 @@ export function Hero({ content = {} }: { content?: HeroContent }) {
 
           {/* Left Content (Spans 5 columns) */}
           <div className="lg:col-span-5 max-w-2xl relative z-20">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+            <div className="animate-fade-up">
               <Badge variant="outline" className="mb-8 border-brand-primary/30 text-brand-primary bg-brand-bg/50 backdrop-blur-md px-4 py-1.5 shadow-sm rounded-full tracking-wide uppercase text-[10px] font-bold">
                 {c.badge}
               </Badge>
-            </motion.div>
+            </div>
 
-            <motion.h1
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-brand-primary leading-[1.05] mb-6 tracking-tighter"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+            <h1
+              className="animate-fade-up text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-brand-primary leading-[1.05] mb-6 tracking-tighter"
+              style={{ animationDelay: "0.1s" }}
             >
               {c.heading}
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              className="text-brand-neutral/80 text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-light"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+            <p
+              className="animate-fade-up text-brand-neutral/80 text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-light"
+              style={{ animationDelay: "0.2s" }}
             >
               {c.subtitle}
-            </motion.p>
+            </p>
 
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+            <div
+              className="animate-fade-up flex flex-col sm:flex-row gap-4"
+              style={{ animationDelay: "0.3s" }}
             >
               <Link
                 href="/contact"
@@ -94,35 +81,32 @@ export function Hero({ content = {} }: { content?: HeroContent }) {
                   <ArrowRight size={18} />
                 </div>
               </Link>
-            </motion.div>
+            </div>
           </div>
 
           {/* Right Content - Modern Image & Glass Card (Spans 7 columns) */}
           <div className="lg:col-span-7 relative h-[320px] sm:h-[420px] md:h-[550px] lg:h-[800px] w-full">
 
             {/* Main Image Layer */}
-            <motion.div
-              className="absolute right-0 top-0 lg:top-10 w-full lg:w-[85%] h-full lg:h-[85%] rounded-[2rem] lg:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-brand-neutral/10 z-0"
-              initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
+            <div
+              className="animate-fade-scale absolute right-0 top-0 lg:top-10 w-full lg:w-[85%] h-full lg:h-[85%] rounded-[2rem] lg:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-brand-neutral/10 z-0"
+              style={{ animationDelay: "0.15s" }}
             >
               <div className="absolute inset-0 bg-brand-primary/10 mix-blend-overlay z-10" />
               <Image
                 src={c.image!}
                 alt="Digital Marketing Professional"
                 fill
+                sizes="(max-width: 1024px) 100vw, 60vw"
                 className="object-cover scale-105 hover:scale-100 transition-transform duration-700"
                 priority
               />
-            </motion.div>
+            </div>
 
             {/* Glass Floating Review Card */}
-            <motion.div
-              className="hidden lg:block absolute left-0 lg:-left-[5%] top-[20%] z-30 w-80 md:w-96"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ type: "spring", stiffness: 100, delay: 0.6 }}
+            <div
+              className="animate-fade-up hidden lg:block absolute left-0 lg:-left-[5%] top-[20%] z-30 w-80 md:w-96"
+              style={{ animationDelay: "0.45s" }}
             >
               <div className="p-8 md:p-10 rounded-[2.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.08)] border border-white/40 bg-white/70 backdrop-blur-xl relative overflow-hidden">
                 {/* Glossy shine effect inside card */}
@@ -154,7 +138,7 @@ export function Hero({ content = {} }: { content?: HeroContent }) {
                       "https://i.pravatar.cc/100?img=6",
                     ].map((src, i) => (
                       <div key={i} className="w-10 h-10 rounded-full border-2 border-white overflow-hidden relative shadow-sm">
-                        <Image src={src} alt={`Avatar ${i + 1}`} fill className="object-cover" />
+                        <Image src={src} alt={`Avatar ${i + 1}`} fill className="object-cover" unoptimized />
                       </div>
                     ))}
                   </div>
@@ -164,7 +148,7 @@ export function Hero({ content = {} }: { content?: HeroContent }) {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
           </div>
         </div>
