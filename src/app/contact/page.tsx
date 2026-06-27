@@ -53,7 +53,7 @@ export default function ContactPage() {
       <section className="py-20 relative z-10">
         <div className="container mx-auto px-4 md:px-8">
           
-          <div className="max-w-7xl mx-auto bg-white/60 backdrop-blur-xl border border-brand-neutral/10 rounded-[3rem] overflow-hidden shadow-2xl">
+          <div className="max-w-7xl mx-auto bg-white/90 border border-brand-neutral/10 rounded-[3rem] overflow-hidden shadow-2xl">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               
               {/* Left Column - Contact Info */}

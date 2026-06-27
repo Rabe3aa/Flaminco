@@ -38,7 +38,7 @@ export function Header() {
         className={cn(
           "w-full max-w-6xl mx-auto flex items-center justify-between transition-all duration-500",
           isScrolled 
-            ? "bg-white/70 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-brand-primary/10 rounded-full px-6 py-3" 
+            ? "bg-white/80 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-brand-primary/10 rounded-full px-6 py-3"
             : "bg-transparent px-2 py-2"
         )}
       >
@@ -120,7 +120,7 @@ export function Header() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full left-4 right-4 mt-4 bg-white/95 backdrop-blur-xl border border-brand-neutral/10 rounded-3xl p-6 shadow-2xl flex flex-col gap-4 z-40"
+              className="absolute top-full left-4 right-4 mt-4 bg-white border border-brand-neutral/10 rounded-3xl p-6 shadow-2xl flex flex-col gap-4 z-40"
             >
               {navLinks.map((link) => (
                 <Link

@@ -1,10 +1,25 @@
-// Static decorative background. Previously this morphed 4 SVG paths via an
-// infinite Framer Motion animation, which ran continuously and drained mobile
-// CPU (causing jank across the whole page). It's purely decorative, so it is
-// now rendered statically — no JS, no per-frame work.
+// Static decorative background.
+//
+// Previously this used two `blur-[120px]` circles, which force the browser to
+// allocate very large offscreen GPU buffers. On a fixed, full-screen layer
+// present on every page, that was enough to exhaust GPU memory on phones and
+// crash the tab ("can't open this page"). The glows are now plain radial
+// gradients — visually similar, but essentially free (no filter, no per-frame
+// work).
 export function AnimatedBackground() {
   return (
     <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-brand-bg">
+      {/* Soft ambient glows (gradients, no blur filter) */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `
+            radial-gradient(45vw 45vw at 88% -5%, rgba(0, 114, 187, 0.06), transparent 70%),
+            radial-gradient(55vw 55vw at 5% 105%, rgba(148, 149, 153, 0.06), transparent 70%)
+          `,
+        }}
+      />
+
       {/* Refined Dot Grid Overlay */}
       <div
         className="absolute inset-0 opacity-[0.2]"
@@ -15,10 +30,6 @@ export function AnimatedBackground() {
           WebkitMaskImage: 'radial-gradient(ellipse at 50% 30%, black 10%, transparent 80%)'
         }}
       />
-
-      {/* Subtle Glow Ambient Lighting */}
-      <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-brand-primary/5 rounded-full blur-[120px] mix-blend-multiply" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-brand-neutral/5 rounded-full blur-[120px] mix-blend-multiply" />
 
       {/* Elegant Wavy Lines SVG (static) */}
       <div className="absolute inset-0 flex items-center justify-center opacity-[0.15]">
