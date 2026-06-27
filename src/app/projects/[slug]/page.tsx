@@ -17,7 +17,7 @@ import { GalleryCarousel } from "@/components/layout/gallery-carousel";
 import { getProjectBySlugForDisplay } from "@/lib/data";
 import type { Block } from "@/lib/page-builder/types";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 type PageProps = {
   params: Promise<{ slug: string }>;

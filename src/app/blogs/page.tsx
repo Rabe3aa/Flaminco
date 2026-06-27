@@ -6,7 +6,7 @@ import { getBlogsForDisplay } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function BlogsPage() {
   const blogs = await getBlogsForDisplay().catch(() => null);

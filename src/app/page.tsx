@@ -11,7 +11,9 @@ import { getFeaturedProjectsForDisplay } from "@/lib/data";
 import { getPublishedTrustedCompanies } from "@/lib/actions/trusted-companies";
 import { getHomeContent } from "@/lib/actions/home";
 
-export const dynamic = "force-dynamic";
+// ISR: served instantly from cache; admin edits trigger on-demand
+// revalidation (revalidatePath) so changes still appear immediately.
+export const revalidate = 3600;
 
 const FALLBACK_PROJECTS = [
   {

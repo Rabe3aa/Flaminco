@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ServicesGrid } from "@/components/layout/services-grid";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function ServicesPage() {
   const raw = await prisma.service.findMany({ where: { published: true }, orderBy: { order: "asc" } });

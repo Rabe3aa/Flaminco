@@ -6,7 +6,7 @@ import { TeamSection } from "@/components/layout/team-section";
 import Image from "next/image";
 import { Award, TrendingUp, Star } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 // Static fallbacks
 const defaultContent: Record<string, string> = {
