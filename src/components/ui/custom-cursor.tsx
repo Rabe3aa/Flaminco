@@ -10,6 +10,16 @@ export function CustomCursor() {
   const pathname = usePathname();
 
   useEffect(() => {
+    // Skip entirely on touch / coarse-pointer devices — no custom cursor there,
+    // and binding mousemove/mouseover listeners only adds overhead on phones.
+    if (
+      typeof window === "undefined" ||
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.innerWidth < 768
+    ) {
+      return;
+    }
+
     const updateMousePosition = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
