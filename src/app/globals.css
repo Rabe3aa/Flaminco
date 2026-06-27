@@ -76,10 +76,34 @@ body {
   will-change: transform;
 }
 
+/* Background wave drift — transform-only, runs on the GPU compositor (cheap),
+   unlike the previous JS path-morphing. Subtle slide + bob for a living feel. */
+@keyframes waveDriftA {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-40px, 18px, 0); }
+}
+
+@keyframes waveDriftB {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(35px, -16px, 0); }
+}
+
+.wave-drift-a {
+  animation: waveDriftA 16s ease-in-out infinite;
+  will-change: transform;
+}
+
+.wave-drift-b {
+  animation: waveDriftB 20s ease-in-out infinite;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-scale,
-  .animate-star {
+  .animate-star,
+  .wave-drift-a,
+  .wave-drift-b {
     animation: none;
   }
 }
