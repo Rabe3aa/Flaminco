@@ -7,6 +7,7 @@ import { AnimatedBackground } from "@/components/layout/animated-background";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Layers, Star, FolderOpen } from "lucide-react";
+import { Reveal } from "@/components/ui/reveal";
 
 type ProjectDisplay = {
   id: string;
@@ -108,7 +109,7 @@ export function ProjectsClient({
       {featured.length > 0 && (
         <section className="py-8 relative z-10">
           <div className="container mx-auto px-4 md:px-8">
-            <div className={`grid gap-6 ${
+            <Reveal className={`grid gap-6 ${
               featured.length === 1
                 ? "grid-cols-1"
                 : featured.length === 2
@@ -167,7 +168,7 @@ export function ProjectsClient({
                   </div>
                 </Link>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
       )}
@@ -184,7 +185,7 @@ export function ProjectsClient({
           )}
 
           {regular.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-12">
+            <Reveal className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-12">
               {regular.map((project) => (
                 <Link
                   href={`/projects/${project.slug}`}
@@ -248,7 +249,7 @@ export function ProjectsClient({
                   )}
                 </Link>
               ))}
-            </div>
+            </Reveal>
           ) : filtered.length === 0 ? (
             <div className="text-center py-24 bg-white rounded-3xl border border-brand-neutral/10 shadow-sm">
               <div className="w-16 h-16 rounded-2xl bg-brand-primary/5 flex items-center justify-center mx-auto mb-6">

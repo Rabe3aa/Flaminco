@@ -7,6 +7,7 @@ import { FeaturesSection } from "@/components/layout/features-section";
 import { TrustedCompaniesMarquee } from "@/components/layout/trusted-companies";
 import { Footer } from "@/components/layout/footer";
 import { AnimatedBackground } from "@/components/layout/animated-background";
+import { Reveal } from "@/components/ui/reveal";
 import { getFeaturedProjectsForDisplay } from "@/lib/data";
 import { getPublishedTrustedCompanies } from "@/lib/actions/trusted-companies";
 import { getHomeContent } from "@/lib/actions/home";
@@ -62,13 +63,13 @@ export default async function Home() {
       <AnimatedBackground />
       <Header />
       <Hero content={pickSection(homeContent, "hero")} />
-      <HighlightRow content={pickSection(homeContent, "highlight")} />
+      <Reveal><HighlightRow content={pickSection(homeContent, "highlight")} /></Reveal>
       {trustedCompanies.length > 0 && (
-        <TrustedCompaniesMarquee companies={trustedCompanies} />
+        <Reveal><TrustedCompaniesMarquee companies={trustedCompanies} /></Reveal>
       )}
-      <ProjectsSection projects={projects} />
-      <AboutSection content={pickSection(homeContent, "about")} />
-      <FeaturesSection content={pickSection(homeContent, "features")} />
+      <Reveal><ProjectsSection projects={projects} /></Reveal>
+      <Reveal><AboutSection content={pickSection(homeContent, "about")} /></Reveal>
+      <Reveal><FeaturesSection content={pickSection(homeContent, "features")} /></Reveal>
       <Footer />
     </main>
   );

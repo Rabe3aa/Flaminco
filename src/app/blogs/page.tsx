@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/footer";
 import { AnimatedBackground } from "@/components/layout/animated-background";
 import { ArrowRight, BookOpen, FileText } from "lucide-react";
 import { getBlogsForDisplay } from "@/lib/data";
+import { Reveal } from "@/components/ui/reveal";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -39,7 +40,7 @@ export default async function BlogsPage() {
       <section className="py-20 relative z-10 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           {blogs && blogs.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Reveal className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {blogs.map((blog) => (
                 <Link 
                   href={`/blogs/${blog.slug}`}
@@ -90,7 +91,7 @@ export default async function BlogsPage() {
                   </div>
                 </Link>
               ))}
-            </div>
+            </Reveal>
           ) : (
             <div className="text-center py-20 bg-brand-bg rounded-3xl border border-brand-neutral/10">
               <FileText className="w-16 h-16 text-brand-neutral/30 mx-auto mb-6" />

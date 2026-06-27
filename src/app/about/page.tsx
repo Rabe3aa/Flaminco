@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/footer";
 import { AnimatedBackground } from "@/components/layout/animated-background";
 import { getAboutContent, getTeamMembers, getJourneyMilestones } from "@/lib/actions/about";
 import { TeamSection } from "@/components/layout/team-section";
+import { Reveal } from "@/components/ui/reveal";
 import Image from "next/image";
 import { Award, TrendingUp, Star } from "lucide-react";
 
@@ -127,7 +128,7 @@ export default async function AboutPage() {
 
           {/* Values Grid */}
           <div className="max-w-5xl mx-auto mb-32">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+            <Reveal className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
               <div>
                 <h3 className="text-3xl font-black text-brand-primary mb-4 tracking-tight">{c["mission.title"]}</h3>
                 <p className="text-brand-neutral/80 leading-relaxed text-lg font-light">
@@ -140,7 +141,7 @@ export default async function AboutPage() {
                   {c["approach.text"]}
                 </p>
               </div>
-            </div>
+            </Reveal>
           </div>
 
         </div>
@@ -196,14 +197,14 @@ export default async function AboutPage() {
               </div>
            </div>
 
-           <TeamSection members={teamMembers} />
+           <Reveal><TeamSection members={teamMembers} /></Reveal>
          </div>
       </section>
 
       {/* Employee Highlight Section */}
       <section className="pb-32 relative z-10">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="bg-brand-primary rounded-[3rem] p-8 md:p-16 overflow-hidden relative shadow-2xl">
+          <Reveal className="bg-brand-primary rounded-[3rem] p-8 md:p-16 overflow-hidden relative shadow-2xl">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:24px_24px]" />
 
@@ -264,7 +265,7 @@ export default async function AboutPage() {
                 );
               })}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 

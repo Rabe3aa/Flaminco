@@ -21,6 +21,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Mark JS as available before paint so scroll-reveal elements start
+            hidden only when they can actually be revealed (no flash, and no
+            permanently-hidden content if JS is disabled). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
+      </head>
       <body
         className={`${inter.variable} font-sans antialiased`}
       >
