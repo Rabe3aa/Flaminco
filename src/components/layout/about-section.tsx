@@ -1,7 +1,4 @@
-"use client";
-
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 
 interface AboutSectionContent {
@@ -46,58 +43,36 @@ export function AboutSection({ content = {} }: { content?: AboutSectionContent }
 
           {/* Left Side - Content & Image */}
           <div className="flex-1 w-full">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5 }}
-            >
+            <div className="animate-fade-up">
               <Badge variant="outline" className="mb-6 bg-brand-bg border-brand-primary/20 text-brand-primary">
                 {c.badge}
               </Badge>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="flex flex-col md:flex-row gap-6 md:flex-wrap lg:flex-nowrap lg:gap-12 mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
+            <div className="animate-fade-up flex flex-col md:flex-row gap-6 md:flex-wrap lg:flex-nowrap lg:gap-12 mb-12" style={{ animationDelay: "0.1s" }}>
               <h2 className="text-4xl md:text-5xl font-bold text-brand-primary leading-[1.1] flex-1">
                 {c.heading}
               </h2>
               <p className="text-brand-neutral flex-1 text-sm md:text-base leading-relaxed md:pt-2">
                 {c.description}
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="relative w-full h-[400px] md:h-[500px] rounded-3xl overflow-hidden"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
+            <div className="animate-fade-up relative w-full h-[400px] md:h-[500px] rounded-3xl overflow-hidden" style={{ animationDelay: "0.2s" }}>
               <div className="absolute inset-0 bg-brand-neutral/10" />
               <Image
                 src={c.image!}
                 alt="Team meeting discussing strategy"
                 fill
+                sizes="(max-width: 1024px) 100vw, 66vw"
                 className="object-cover"
               />
-            </motion.div>
+            </div>
           </div>
 
           {/* Right Side - Feature List */}
           <div className="w-full lg:w-[450px] shrink-0 pt-0 lg:pt-[200px]">
-            <motion.div
-              className="bg-brand-bg rounded-3xl p-6 md:p-8 flex flex-col gap-2"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
+            <div className="animate-fade-up bg-brand-bg rounded-3xl p-6 md:p-8 flex flex-col gap-2" style={{ animationDelay: "0.3s" }}>
               {features.map((feature, index) => (
                 <div
                   key={index}
@@ -114,7 +89,7 @@ export function AboutSection({ content = {} }: { content?: AboutSectionContent }
                   </div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
 
         </div>

@@ -6,8 +6,23 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AnimatedBackground } from "@/components/layout/animated-background";
 import { getBlogBySlugForDisplay } from "@/lib/data";
+import { prisma } from "@/lib/prisma";
 
 export const revalidate = 3600;
+
+// Pre-render every published blog post at build time so first visits are
+// instant. New slugs still render on-demand (and then cache) via ISR.
+export async function generateStaticParams() {
+  try {
+    const blogs = await prisma.blog.findMany({
+      where: { published: true },
+      select: { slug: true },
+    });
+    return blogs.map((b) => ({ slug: b.slug }));
+  } catch {
+    return [];
+  }
+}
 
 type PageProps = {
   params: Promise<{ slug: string }>;

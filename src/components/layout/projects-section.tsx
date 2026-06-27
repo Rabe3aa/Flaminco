@@ -21,29 +21,14 @@ export function ProjectsSection({ projects }: { projects: ProjectItem[] }) {
       {/* Header Area */}
       <div className="container mx-auto px-4 md:px-8 py-24 relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
          <div>
-             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-bg/10 border border-brand-bg/20 text-brand-bg font-bold text-xs uppercase tracking-widest mb-6"
-            >
+             <div className="animate-fade-up inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-bg/10 border border-brand-bg/20 text-brand-bg font-bold text-xs uppercase tracking-widest mb-6">
               Selected Work
-            </motion.div>
+            </div>
              <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-4 flex items-center gap-3 md:gap-4 flex-wrap">
                 Featured Projects
-                <motion.div
-                  animate={{ 
-                    rotate: [0, 15, -15, 0],
-                    scale: [1, 1.2, 1]
-                  }}
-                  transition={{ 
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
+                <span className="animate-star inline-flex">
                   <Star className="w-12 h-12 md:w-16 md:h-16 text-[#FFD700] fill-[#FFD700]" />
-                </motion.div>
+                </span>
              </h2>
              <p className="text-brand-bg/80 max-w-md text-lg">
                 Explore how we have scaled ambitious brands through strategic design and data-driven marketing.

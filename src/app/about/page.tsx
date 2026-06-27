@@ -118,6 +118,7 @@ export default async function AboutPage() {
               src={c["hero.image"]}
               alt="Team collaborating"
               fill
+              sizes="100vw"
               className="object-cover"
               priority
             />

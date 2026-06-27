@@ -1,7 +1,4 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { BarChart3, Share2, Target, Zap, Rocket } from "lucide-react";
+import { BarChart3, Share2, Target, Rocket, Zap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface FeaturesSectionContent {
@@ -49,25 +46,13 @@ export function FeaturesSection({ content = {} }: { content?: FeaturesSectionCon
 
         {/* Header */}
         <div className="mb-20 text-center max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 text-brand-primary font-bold text-xs uppercase tracking-widest mb-6"
-          >
+          <div className="animate-fade-up inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 text-brand-primary font-bold text-xs uppercase tracking-widest mb-6">
             <Zap size={14} className="fill-brand-primary" />
             {c.badge}
-          </motion.div>
-          <motion.h2
-            className="text-4xl md:text-5xl lg:text-6xl font-black text-brand-primary leading-[1.1] mb-6 tracking-tighter"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
+          </div>
+          <h2 className="animate-fade-up text-4xl md:text-5xl lg:text-6xl font-black text-brand-primary leading-[1.1] mb-6 tracking-tighter" style={{ animationDelay: "0.1s" }}>
             {c.heading}
-          </motion.h2>
+          </h2>
         </div>
 
         {/* Bento Grid Features */}
@@ -75,13 +60,10 @@ export function FeaturesSection({ content = {} }: { content?: FeaturesSectionCon
           {features.map((feature, index) => {
             const Icon = ICONS[index];
             return (
-              <motion.div
+              <div
                 key={index}
-                className={`${COL_SPANS[index]} h-full`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
+                className={`animate-fade-up ${COL_SPANS[index]} h-full`}
+                style={{ animationDelay: `${0.1 * index}s` }}
               >
                 <Card className="group relative bg-white/60 backdrop-blur-md border border-brand-neutral/10 p-10 rounded-[2.5rem] h-full overflow-hidden hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-brand-primary/10 hover:-translate-y-1">
 
@@ -107,7 +89,7 @@ export function FeaturesSection({ content = {} }: { content?: FeaturesSectionCon
                   {/* Hover line indicator */}
                   <div className="absolute bottom-0 left-0 w-0 h-1.5 bg-brand-primary transition-all duration-500 group-hover:w-full" />
                 </Card>
-              </motion.div>
+              </div>
             );
           })}
         </div>

@@ -15,9 +15,24 @@ import { AnimatedBackground } from "@/components/layout/animated-background";
 import { BlockRenderer } from "@/components/layout/block-renderer";
 import { GalleryCarousel } from "@/components/layout/gallery-carousel";
 import { getProjectBySlugForDisplay } from "@/lib/data";
+import { prisma } from "@/lib/prisma";
 import type { Block } from "@/lib/page-builder/types";
 
 export const revalidate = 3600;
+
+// Pre-render every published project at build time so first visits are instant.
+// Slugs created later still render on-demand (and then cache) via ISR.
+export async function generateStaticParams() {
+  try {
+    const projects = await prisma.project.findMany({
+      where: { published: true },
+      select: { slug: true },
+    });
+    return projects.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
+}
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -62,6 +77,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               src={project.image}
               alt={project.title}
               fill
+              sizes="100vw"
               className="object-cover"
               priority
             />
