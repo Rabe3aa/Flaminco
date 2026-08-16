@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/footer";
 import { AnimatedBackground } from "@/components/layout/animated-background";
 import { getBlogBySlugForDisplay } from "@/lib/data";
 import { prisma } from "@/lib/prisma";
+import { BlogMarkdown } from "@/components/layout/blog-markdown";
 
 export const revalidate = 3600;
 
@@ -116,13 +117,8 @@ export default async function BlogDetailPage({ params }: PageProps) {
       {/* Content */}
       <section className="py-16 relative z-10 bg-white border-y border-brand-neutral/10">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="max-w-3xl mx-auto prose prose-lg prose-gray">
-            <div
-              className="text-brand-neutral/90 leading-relaxed text-lg whitespace-pre-wrap"
-              style={{ lineHeight: 1.8 }}
-            >
-              {blog.content}
-            </div>
+          <div className="max-w-3xl mx-auto">
+            <BlogMarkdown content={blog.content} />
           </div>
         </div>
       </section>
