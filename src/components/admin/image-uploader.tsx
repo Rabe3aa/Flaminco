@@ -4,7 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import { Upload, X, Loader2, ImageIcon, Link as LinkIcon } from "lucide-react";
 import Image from "next/image";
 import { upload } from "@vercel/blob/client";
-import { ALLOWED_UPLOAD_TYPES, MAX_UPLOAD_SIZE } from "@/lib/upload-config";
+import { ALLOWED_IMAGE_TYPES, MAX_UPLOAD_SIZE } from "@/lib/upload-config";
 
 interface ImageUploaderProps {
   value: string[];
@@ -33,7 +33,7 @@ export function ImageUploader({
       const fileArray = Array.from(files);
 
       for (const file of fileArray) {
-        const ext = ALLOWED_UPLOAD_TYPES[file.type];
+        const ext = ALLOWED_IMAGE_TYPES[file.type];
         if (!ext) {
           setError(
             `Invalid file type: ${file.name}. Allowed: JPEG, PNG, WebP, GIF, SVG`
@@ -52,7 +52,7 @@ export function ImageUploader({
         const blobs = await Promise.all(
           fileArray.map((file) =>
             upload(
-              `uploads/${crypto.randomUUID()}.${ALLOWED_UPLOAD_TYPES[file.type]}`,
+              `uploads/${crypto.randomUUID()}.${ALLOWED_IMAGE_TYPES[file.type]}`,
               file,
               {
                 access: "public",

@@ -21,6 +21,8 @@ export default async function EditServicePage({
     icon: service.icon || "",
     images: service.images.join("\n"),
     thumbnail: service.thumbnail || service.images[0] || "",
+    brochureUrl: service.brochureUrl || "",
+    brochureName: service.brochureName || "",
     order: service.order,
     published: service.published,
   };

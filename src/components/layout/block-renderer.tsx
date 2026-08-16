@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
-import type { Block, HeadingBlock, TextBlock, ImageBlock, GalleryBlock, SpacerBlock, BannerBlock, TwoColumnsBlock, QuoteBlock } from "@/lib/page-builder/types";
+import { X, ChevronLeft, ChevronRight, ZoomIn, FileText, Download } from "lucide-react";
+import type { Block, HeadingBlock, TextBlock, ImageBlock, GalleryBlock, SpacerBlock, BannerBlock, TwoColumnsBlock, QuoteBlock, FileBlock } from "@/lib/page-builder/types";
 
 export function BlockRenderer({ blocks }: { blocks: Block[] }) {
   return (
@@ -19,7 +20,17 @@ function Lightbox({ images, index, onClose }: { images: string[]; index: number;
   const [current, setCurrent] = useState(index);
   const total = images.length;
 
-  return (
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight" && total > 1) setCurrent((c) => (c + 1) % total);
+      if (e.key === "ArrowLeft" && total > 1) setCurrent((c) => (c - 1 + total) % total);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose, total]);
+
+  return createPortal(
     <div
       className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-sm flex items-center justify-center"
       onClick={onClose}
@@ -63,7 +74,8 @@ function Lightbox({ images, index, onClose }: { images: string[]; index: number;
           </button>
         </>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -85,6 +97,8 @@ function RenderBlock({ block }: { block: Block }) {
       return <RenderTwoColumns block={block} />;
     case "quote":
       return <RenderQuote block={block} />;
+    case "file":
+      return <RenderFile block={block} />;
     default:
       return null;
   }
@@ -296,6 +310,37 @@ function RenderColumn({ column }: { column: { type: "text" | "image"; content: s
       <p className="text-base md:text-lg leading-relaxed text-brand-neutral/80 whitespace-pre-line">
         {column.content}
       </p>
+    </div>
+  );
+}
+
+function RenderFile({ block }: { block: FileBlock }) {
+  if (!block.data.url) return null;
+
+  return (
+    <div className="container mx-auto px-4 md:px-8 py-6">
+      <a
+        href={block.data.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-4 max-w-md w-full sm:w-auto px-5 py-4 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/20 rounded-2xl transition-all group"
+      >
+        <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center shrink-0">
+          <FileText size={18} className="text-white" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-brand-primary">
+            {block.data.label || "Download File"}
+          </p>
+          {block.data.fileName && (
+            <p className="text-xs text-brand-neutral/50 truncate">{block.data.fileName}</p>
+          )}
+        </div>
+        <Download
+          size={16}
+          className="text-brand-primary/60 ml-auto shrink-0 group-hover:translate-y-0.5 transition-transform"
+        />
+      </a>
     </div>
   );
 }

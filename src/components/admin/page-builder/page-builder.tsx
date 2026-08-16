@@ -32,6 +32,7 @@ import {
   RectangleHorizontal,
   Columns2,
   Quote,
+  FileText,
   Check,
 } from "lucide-react";
 import type { Block, BlockType, BLOCK_DEFINITIONS } from "@/lib/page-builder/types";
@@ -39,7 +40,7 @@ import { SortableBlock } from "./sortable-block";
 import { BlockEditor } from "./block-editor";
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  Type, AlignLeft, Image, LayoutGrid, SeparatorHorizontal, RectangleHorizontal, Columns2, Quote,
+  Type, AlignLeft, Image, LayoutGrid, SeparatorHorizontal, RectangleHorizontal, Columns2, Quote, FileText,
 };
 
 const BLOCK_DEFS: typeof BLOCK_DEFINITIONS = [
@@ -102,6 +103,13 @@ const BLOCK_DEFS: typeof BLOCK_DEFINITIONS = [
     icon: "Quote",
     description: "Highlighted quote or testimonial",
     defaultData: { text: "Quote text here", author: "" },
+  },
+  {
+    type: "file",
+    label: "File",
+    icon: "FileText",
+    description: "Downloadable PDF document",
+    defaultData: { url: "", fileName: "", label: "Download PDF" },
   },
 ];
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { createPortal } from "react-dom";
+import { X, ChevronLeft, ChevronRight, ZoomIn, FileDown } from "lucide-react";
 import { BlockRenderer } from "./block-renderer";
 import type { Block } from "@/lib/page-builder/types";
 import Image from "next/image";
@@ -14,6 +15,8 @@ interface ServiceData {
   images: string[];
   thumbnail?: string | null;
   layout?: unknown[] | null;
+  brochureUrl?: string | null;
+  brochureName?: string | null;
 }
 
 export function ServiceDetailModal({
@@ -90,7 +93,7 @@ export function ServiceDetailModal({
     service.images[0] ||
     "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=1440&auto=format&fit=crop";
 
-  return (
+  return createPortal(
     <>
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
       {/* Backdrop */}
@@ -178,6 +181,26 @@ export function ServiceDetailModal({
                 <p className="text-base sm:text-lg leading-relaxed text-brand-neutral/80 whitespace-pre-line">
                   {service.description}
                 </p>
+              )}
+
+              {/* Brochure download */}
+              {service.brochureUrl && (
+                <a
+                  href={service.brochureUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-4 max-w-md w-full sm:w-auto px-5 py-4 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/20 rounded-2xl transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center shrink-0">
+                    <FileDown size={18} className="text-white" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-brand-primary">Download Brochure</p>
+                    {service.brochureName && (
+                      <p className="text-xs text-brand-neutral/50 truncate">{service.brochureName}</p>
+                    )}
+                  </div>
+                </a>
               )}
 
               {/* Gallery images — click to open fullscreen */}
@@ -275,6 +298,7 @@ export function ServiceDetailModal({
           )}
         </div>
       )}
-    </>
+    </>,
+    document.body
   );
 }

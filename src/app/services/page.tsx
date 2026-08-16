@@ -19,6 +19,8 @@ export default async function ServicesPage() {
     images: s.images,
     thumbnail: (s as unknown as { thumbnail?: string | null }).thumbnail || null,
     layout: s.layout as unknown[] | null,
+    brochureUrl: s.brochureUrl || null,
+    brochureName: s.brochureName || null,
   }));
 
   return (

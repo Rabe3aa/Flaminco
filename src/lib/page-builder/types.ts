@@ -6,7 +6,8 @@ export type BlockType =
   | "spacer"
   | "banner"
   | "two-columns"
-  | "quote";
+  | "quote"
+  | "file";
 
 export interface BlockBase {
   id: string;
@@ -83,6 +84,15 @@ export interface QuoteBlock extends BlockBase {
   };
 }
 
+export interface FileBlock extends BlockBase {
+  type: "file";
+  data: {
+    url: string;
+    fileName: string;
+    label: string;
+  };
+}
+
 export type Block =
   | HeadingBlock
   | TextBlock
@@ -91,7 +101,8 @@ export type Block =
   | SpacerBlock
   | BannerBlock
   | TwoColumnsBlock
-  | QuoteBlock;
+  | QuoteBlock
+  | FileBlock;
 
 export interface BlockDefinition {
   type: BlockType;
@@ -161,5 +172,12 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     icon: "Quote",
     description: "Highlighted quote or testimonial",
     defaultData: { text: "Quote text here", author: "" },
+  },
+  {
+    type: "file",
+    label: "File",
+    icon: "FileText",
+    description: "Downloadable PDF document",
+    defaultData: { url: "", fileName: "", label: "Download PDF" },
   },
 ];

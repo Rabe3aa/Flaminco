@@ -33,6 +33,7 @@ import {
   Crown,
   Gem,
   Zap,
+  FileDown,
 } from "lucide-react";
 import { ServiceDetailModal } from "./service-detail-modal";
 
@@ -91,6 +92,8 @@ interface ServiceItem {
   images: string[];
   thumbnail?: string | null;
   layout?: unknown[] | null;
+  brochureUrl?: string | null;
+  brochureName?: string | null;
 }
 
 export function ServicesGrid({ services }: { services: ServiceItem[] }) {
@@ -125,6 +128,20 @@ export function ServicesGrid({ services }: { services: ServiceItem[] }) {
                 <div className={`absolute -bottom-6 right-8 w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md bg-white/90 z-10 ${color} group-hover:-translate-y-2 transition-transform duration-300`}>
                   <IconComp size={24} />
                 </div>
+
+                {/* Download brochure button */}
+                {service.brochureUrl && (
+                  <a
+                    href={service.brochureUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    title={service.brochureName || "Download PDF"}
+                    className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-brand-primary shadow-lg hover:bg-white hover:scale-110 transition-all"
+                  >
+                    <FileDown size={18} />
+                  </a>
+                )}
               </div>
 
               {/* Content Section (Bottom Half) */}
@@ -161,6 +178,8 @@ export function ServicesGrid({ services }: { services: ServiceItem[] }) {
           images: selected.images.length > 0 ? selected.images : [selected.resolvedImage],
           thumbnail: selected.thumbnail || null,
           layout: selected.layout,
+          brochureUrl: selected.brochureUrl || null,
+          brochureName: selected.brochureName || null,
         } : null}
         onClose={() => setSelected(null)}
       />

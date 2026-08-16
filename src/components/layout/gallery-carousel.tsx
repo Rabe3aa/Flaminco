@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
 
@@ -161,7 +162,7 @@ export function GalleryCarousel({ images, title }: GalleryCarouselProps) {
     </div>
 
       {/* Fullscreen lightbox */}
-      {lightbox !== null && (
+      {lightbox !== null && createPortal(
         <div
           className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-sm flex items-center justify-center"
           style={{ animation: "fadeIn 0.2s ease forwards" }}
@@ -206,7 +207,8 @@ export function GalleryCarousel({ images, title }: GalleryCarouselProps) {
               </button>
             </>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

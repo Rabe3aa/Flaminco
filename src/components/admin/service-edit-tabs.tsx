@@ -12,6 +12,8 @@ interface ServiceEditTabsProps {
     icon: string;
     images: string;
     thumbnail: string;
+    brochureUrl: string;
+    brochureName: string;
     order: number;
     published: boolean;
   };

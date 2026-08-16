@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { Block, ImageBlock, TextBlock, HeadingBlock, GalleryBlock, SpacerBlock, BannerBlock, TwoColumnsBlock, QuoteBlock } from "@/lib/page-builder/types";
+import type { Block, ImageBlock, TextBlock, HeadingBlock, GalleryBlock, SpacerBlock, BannerBlock, TwoColumnsBlock, QuoteBlock, FileBlock } from "@/lib/page-builder/types";
 import { ImageUploader } from "../image-uploader";
+import { FileUploader, type UploadedFile } from "../file-uploader";
 
 interface BlockEditorProps {
   block: Block;
@@ -27,6 +28,8 @@ export function BlockEditor({ block, onChange }: BlockEditorProps) {
       return <TwoColumnsEditor block={block} onChange={onChange} />;
     case "quote":
       return <QuoteEditor block={block} onChange={onChange} />;
+    case "file":
+      return <FileEditor block={block} onChange={onChange} />;
     default:
       return <div className="text-gray-400 text-sm">Unknown block type</div>;
   }
@@ -323,6 +326,32 @@ function ColumnEditor({
           multiple={false}
         />
       )}
+    </div>
+  );
+}
+
+function FileEditor({ block, onChange }: { block: FileBlock; onChange: (b: Block) => void }) {
+  const value: UploadedFile | null = block.data.url
+    ? { url: block.data.url, name: block.data.fileName || block.data.url.split("/").pop() || "Document.pdf" }
+    : null;
+
+  return (
+    <div className="space-y-3">
+      <input
+        value={block.data.label}
+        onChange={(e) => onChange({ ...block, data: { ...block.data, label: e.target.value } })}
+        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0072BB]"
+        placeholder="Button label (e.g. Download Brochure)"
+      />
+      <FileUploader
+        value={value}
+        onChange={(file) =>
+          onChange({
+            ...block,
+            data: { ...block.data, url: file?.url || "", fileName: file?.name || "" },
+          })
+        }
+      />
     </div>
   );
 }
