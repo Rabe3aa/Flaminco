@@ -3,6 +3,8 @@
 import { useState, useRef, useCallback } from "react";
 import { Upload, X, Loader2, ImageIcon, Link as LinkIcon } from "lucide-react";
 import Image from "next/image";
+import { upload } from "@vercel/blob/client";
+import { ALLOWED_UPLOAD_TYPES, MAX_UPLOAD_SIZE } from "@/lib/upload-config";
 
 interface ImageUploaderProps {
   value: string[];
@@ -27,33 +29,50 @@ export function ImageUploader({
   const uploadFiles = useCallback(
     async (files: FileList | File[]) => {
       setError(null);
+
+      const fileArray = Array.from(files);
+
+      for (const file of fileArray) {
+        const ext = ALLOWED_UPLOAD_TYPES[file.type];
+        if (!ext) {
+          setError(
+            `Invalid file type: ${file.name}. Allowed: JPEG, PNG, WebP, GIF, SVG`
+          );
+          return;
+        }
+        if (file.size > MAX_UPLOAD_SIZE) {
+          setError(`File too large: ${file.name}. Max size: 25MB`);
+          return;
+        }
+      }
+
       setUploading(true);
 
       try {
-        const formData = new FormData();
-        for (const file of Array.from(files)) {
-          formData.append("files", file);
-        }
-
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          setError(data.error || "Upload failed");
-          return;
-        }
+        const blobs = await Promise.all(
+          fileArray.map((file) =>
+            upload(
+              `uploads/${crypto.randomUUID()}.${ALLOWED_UPLOAD_TYPES[file.type]}`,
+              file,
+              {
+                access: "public",
+                handleUploadUrl: "/api/upload",
+                contentType: file.type,
+              }
+            )
+          )
+        );
+        const urls = blobs.map((blob) => blob.url);
 
         if (multiple) {
-          onChange([...value, ...data.urls]);
+          onChange([...value, ...urls]);
         } else {
-          onChange(data.urls.slice(0, 1));
+          onChange(urls.slice(0, 1));
         }
-      } catch {
-        setError("Upload failed. Please try again.");
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Upload failed. Please try again."
+        );
       } finally {
         setUploading(false);
       }
@@ -194,7 +213,7 @@ export function ImageUploader({
                 <span className="text-[#0072BB]">browse</span>
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                JPEG, PNG, WebP, GIF, SVG — Max 10MB
+                JPEG, PNG, WebP, GIF, SVG — Max 25MB
               </p>
             </div>
           </div>

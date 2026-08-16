@@ -1,59 +1,32 @@
-import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+import { NextResponse } from "next/server";
+import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { auth } from "@/lib/auth";
-import { randomUUID } from "crypto";
+import { ALLOWED_UPLOAD_TYPES, MAX_UPLOAD_SIZE } from "@/lib/upload-config";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB per file
-
-const ALLOWED_TYPES: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-  "image/gif": "gif",
-  "image/svg+xml": "svg",
-};
-
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const body = (await request.json()) as HandleUploadBody;
+
   try {
-    const formData = await request.formData();
-    const files = formData.getAll("files") as File[];
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async () => ({
+        allowedContentTypes: Object.keys(ALLOWED_UPLOAD_TYPES),
+        maximumSizeInBytes: MAX_UPLOAD_SIZE,
+      }),
+    });
 
-    if (!files || files.length === 0) {
-      return NextResponse.json({ error: "No files provided" }, { status: 400 });
-    }
-
-    const uploadedUrls: string[] = [];
-
-    for (const file of files) {
-      const ext = ALLOWED_TYPES[file.type];
-      if (!ext) {
-        return NextResponse.json(
-          { error: `Invalid file type: ${file.type}. Allowed: JPEG, PNG, WebP, GIF, SVG` },
-          { status: 400 }
-        );
-      }
-
-      if (file.size > MAX_FILE_SIZE) {
-        return NextResponse.json(
-          { error: `File too large: ${file.name}. Max size: 10MB` },
-          { status: 400 }
-        );
-      }
-
-      const filename = `uploads/${randomUUID()}.${ext}`;
-      const blob = await put(filename, file, { access: "public" });
-
-      uploadedUrls.push(blob.url);
-    }
-
-    return NextResponse.json({ urls: uploadedUrls });
+    return NextResponse.json(jsonResponse);
   } catch (error) {
     console.error("[upload] Error:", error);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Upload failed" },
+      { status: 400 }
+    );
   }
 }
