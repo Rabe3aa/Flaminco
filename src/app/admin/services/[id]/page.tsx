@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { Block } from "@/lib/page-builder/types";
+import type { UploadedFile } from "@/components/admin/file-uploader";
 
 export default async function EditServicePage({
   params,
@@ -21,8 +22,7 @@ export default async function EditServicePage({
     icon: service.icon || "",
     images: service.images.join("\n"),
     thumbnail: service.thumbnail || service.images[0] || "",
-    brochureUrl: service.brochureUrl || "",
-    brochureName: service.brochureName || "",
+    brochures: (Array.isArray(service.brochures) ? service.brochures : []) as unknown as UploadedFile[],
     order: service.order,
     published: service.published,
   };

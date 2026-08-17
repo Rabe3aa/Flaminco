@@ -7,6 +7,11 @@ import { BlockRenderer } from "./block-renderer";
 import type { Block } from "@/lib/page-builder/types";
 import Image from "next/image";
 
+interface Brochure {
+  url: string;
+  name: string;
+}
+
 interface ServiceData {
   id: string;
   title: string;
@@ -15,8 +20,7 @@ interface ServiceData {
   images: string[];
   thumbnail?: string | null;
   layout?: unknown[] | null;
-  brochureUrl?: string | null;
-  brochureName?: string | null;
+  brochures?: Brochure[];
 }
 
 export function ServiceDetailModal({
@@ -183,24 +187,27 @@ export function ServiceDetailModal({
                 </p>
               )}
 
-              {/* Brochure download */}
-              {service.brochureUrl && (
-                <a
-                  href={service.brochureUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-4 max-w-md w-full sm:w-auto px-5 py-4 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/20 rounded-2xl transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center shrink-0">
-                    <FileDown size={18} className="text-white" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-brand-primary">Download Brochure</p>
-                    {service.brochureName && (
-                      <p className="text-xs text-brand-neutral/50 truncate">{service.brochureName}</p>
-                    )}
-                  </div>
-                </a>
+              {/* Brochure downloads */}
+              {service.brochures && service.brochures.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  {service.brochures.map((brochure, i) => (
+                    <a
+                      key={`${brochure.url}-${i}`}
+                      href={brochure.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-4 max-w-md w-full sm:w-auto px-5 py-4 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/20 rounded-2xl transition-all group"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center shrink-0">
+                        <FileDown size={18} className="text-white" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-brand-primary">Download Brochure</p>
+                        <p className="text-xs text-brand-neutral/50 truncate">{brochure.name}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               )}
 
               {/* Gallery images — click to open fullscreen */}

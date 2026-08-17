@@ -75,8 +75,7 @@ interface ServiceFormData {
   icon: string;
   images: string;
   thumbnail: string;
-  brochureUrl: string;
-  brochureName: string;
+  brochures: UploadedFile[];
   order: number;
   published: boolean;
 }
@@ -112,8 +111,7 @@ export function ServiceForm({
     icon: "",
     images: "",
     thumbnail: "",
-    brochureUrl: "",
-    brochureName: "",
+    brochures: [],
     order: 0,
     published: true,
   };
@@ -123,9 +121,7 @@ export function ServiceForm({
   );
   const [selectedIcon, setSelectedIcon] = useState(defaults.icon || "Gift");
   const [thumbnail, setThumbnail] = useState<string>(defaults.thumbnail || "");
-  const [brochure, setBrochure] = useState<UploadedFile | null>(
-    defaults.brochureUrl ? { url: defaults.brochureUrl, name: defaults.brochureName || "Brochure.pdf" } : null
-  );
+  const [brochures, setBrochures] = useState<UploadedFile[]>(defaults.brochures || []);
 
   // Auto-select first gallery image as thumbnail if none is set
   useEffect(() => {
@@ -139,8 +135,7 @@ export function ServiceForm({
       action={async (formData) => {
         formData.set("images", galleryUrls.join("\n"));
         formData.set("thumbnail", thumbnail);
-        formData.set("brochureUrl", brochure?.url || "");
-        formData.set("brochureName", brochure?.name || "");
+        formData.set("brochures", JSON.stringify(brochures));
         await action(formData);
       }}
       className="space-y-6"
@@ -265,12 +260,12 @@ export function ServiceForm({
 
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-5">
             <div>
-              <h2 className="text-lg font-semibold text-white">Brochure / Spec Sheet</h2>
+              <h2 className="text-lg font-semibold text-white">Brochures / Spec Sheets</h2>
               <p className="text-gray-500 text-xs mt-0.5">
-                Optional PDF attachment, downloadable from the service card and detail popup.
+                Optional PDF attachments, downloadable from the service card and detail popup.
               </p>
             </div>
-            <FileUploader label="" value={brochure} onChange={setBrochure} />
+            <FileUploader label="" value={brochures} onChange={setBrochures} multiple />
           </div>
         </div>
 

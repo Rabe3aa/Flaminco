@@ -11,12 +11,18 @@ export interface UploadedFile {
 }
 
 interface FileUploaderProps {
-  value: UploadedFile | null;
-  onChange: (file: UploadedFile | null) => void;
+  value: UploadedFile[];
+  onChange: (files: UploadedFile[]) => void;
+  multiple?: boolean;
   label?: string;
 }
 
-export function FileUploader({ value, onChange, label = "PDF Document" }: FileUploaderProps) {
+export function FileUploader({
+  value,
+  onChange,
+  multiple = false,
+  label = "PDF Document",
+}: FileUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [urlInput, setUrlInput] = useState("");
@@ -24,30 +30,43 @@ export function FileUploader({ value, onChange, label = "PDF Document" }: FileUp
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const uploadFile = useCallback(
-    async (file: File) => {
+  const uploadFiles = useCallback(
+    async (files: FileList | File[]) => {
       setError(null);
 
-      const ext = ALLOWED_DOCUMENT_TYPES[file.type];
-      if (!ext) {
-        setError(`Invalid file type: ${file.name}. Only PDF is allowed`);
-        return;
-      }
-      if (file.size > MAX_UPLOAD_SIZE) {
-        setError(`File too large: ${file.name}. Max size: 25MB`);
-        return;
+      const fileArray = Array.from(files);
+
+      for (const file of fileArray) {
+        const ext = ALLOWED_DOCUMENT_TYPES[file.type];
+        if (!ext) {
+          setError(`Invalid file type: ${file.name}. Only PDF is allowed`);
+          return;
+        }
+        if (file.size > MAX_UPLOAD_SIZE) {
+          setError(`File too large: ${file.name}. Max size: 25MB`);
+          return;
+        }
       }
 
       setUploading(true);
 
       try {
-        const blob = await upload(`uploads/${crypto.randomUUID()}.${ext}`, file, {
-          access: "public",
-          handleUploadUrl: "/api/upload",
-          contentType: file.type,
-        });
+        const blobs = await Promise.all(
+          fileArray.map((file) =>
+            upload(`uploads/${crypto.randomUUID()}.${ALLOWED_DOCUMENT_TYPES[file.type]}`, file, {
+              access: "public",
+              handleUploadUrl: "/api/upload",
+              contentType: file.type,
+            })
+          )
+        );
+        const uploaded = blobs.map((blob, i) => ({ url: blob.url, name: fileArray[i].name }));
 
-        onChange({ url: blob.url, name: file.name });
+        if (multiple) {
+          onChange([...value, ...uploaded]);
+        } else {
+          onChange(uploaded.slice(0, 1));
+        }
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Upload failed. Please try again."
@@ -56,7 +75,7 @@ export function FileUploader({ value, onChange, label = "PDF Document" }: FileUp
         setUploading(false);
       }
     },
-    [onChange]
+    [value, onChange, multiple]
   );
 
   const handleDrop = useCallback(
@@ -64,10 +83,10 @@ export function FileUploader({ value, onChange, label = "PDF Document" }: FileUp
       e.preventDefault();
       setDragOver(false);
       if (e.dataTransfer.files.length > 0) {
-        uploadFile(e.dataTransfer.files[0]);
+        uploadFiles(e.dataTransfer.files);
       }
     },
-    [uploadFile]
+    [uploadFiles]
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -83,11 +102,11 @@ export function FileUploader({ value, onChange, label = "PDF Document" }: FileUp
   const handleFileSelect = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files && e.target.files.length > 0) {
-        uploadFile(e.target.files[0]);
+        uploadFiles(e.target.files);
       }
       e.target.value = "";
     },
-    [uploadFile]
+    [uploadFiles]
   );
 
   const addUrl = useCallback(() => {
@@ -98,10 +117,24 @@ export function FileUploader({ value, onChange, label = "PDF Document" }: FileUp
       return;
     }
     setError(null);
-    onChange({ url: trimmed, name: trimmed.split("/").pop() || trimmed });
+    const file = { url: trimmed, name: trimmed.split("/").pop() || trimmed };
+    if (multiple) {
+      onChange([...value, file]);
+    } else {
+      onChange([file]);
+    }
     setUrlInput("");
     setShowUrlInput(false);
-  }, [urlInput, onChange]);
+  }, [urlInput, value, onChange, multiple]);
+
+  const removeFile = useCallback(
+    (index: number) => {
+      onChange(value.filter((_, i) => i !== index));
+    },
+    [value, onChange]
+  );
+
+  const showDropZone = multiple || value.length === 0;
 
   return (
     <div className="space-y-3">
@@ -137,30 +170,39 @@ export function FileUploader({ value, onChange, label = "PDF Document" }: FileUp
         </div>
       )}
 
-      {value ? (
-        <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3">
-          <div className="w-9 h-9 rounded-lg bg-[#0072BB]/10 flex items-center justify-center shrink-0">
-            <FileText className="w-4 h-4 text-[#0072BB]" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <a
-              href={value.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-white truncate block hover:text-[#0072BB] transition-colors"
+      {value.length > 0 && (
+        <div className="space-y-2">
+          {value.map((file, index) => (
+            <div
+              key={`${file.url}-${index}`}
+              className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3"
             >
-              {value.name}
-            </a>
-          </div>
-          <button
-            type="button"
-            onClick={() => onChange(null)}
-            className="w-7 h-7 shrink-0 bg-white/5 hover:bg-red-500 text-gray-400 hover:text-white rounded-lg flex items-center justify-center transition-all"
-          >
-            <X className="w-4 h-4" />
-          </button>
+              <div className="w-9 h-9 rounded-lg bg-[#0072BB]/10 flex items-center justify-center shrink-0">
+                <FileText className="w-4 h-4 text-[#0072BB]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <a
+                  href={file.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-white truncate block hover:text-[#0072BB] transition-colors"
+                >
+                  {file.name}
+                </a>
+              </div>
+              <button
+                type="button"
+                onClick={() => removeFile(index)}
+                className="w-7 h-7 shrink-0 bg-white/5 hover:bg-red-500 text-gray-400 hover:text-white rounded-lg flex items-center justify-center transition-all"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
         </div>
-      ) : (
+      )}
+
+      {showDropZone && (
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -180,6 +222,7 @@ export function FileUploader({ value, onChange, label = "PDF Document" }: FileUp
             ref={fileInputRef}
             type="file"
             accept="application/pdf"
+            multiple={multiple}
             onChange={handleFileSelect}
             className="hidden"
           />
@@ -196,7 +239,7 @@ export function FileUploader({ value, onChange, label = "PDF Document" }: FileUp
               </div>
               <div>
                 <p className="text-sm text-gray-300 font-medium">
-                  Drop a PDF here or <span className="text-[#0072BB]">browse</span>
+                  Drop {multiple ? "PDFs" : "a PDF"} here or <span className="text-[#0072BB]">browse</span>
                 </p>
                 <p className="text-xs text-gray-500 mt-1">PDF — Max 25MB</p>
               </div>

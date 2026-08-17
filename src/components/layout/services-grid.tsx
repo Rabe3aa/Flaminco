@@ -84,6 +84,11 @@ const FALLBACK_IMAGES: Record<string, string> = {
   "Personalized Logo Printing": "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1471&auto=format&fit=crop",
 };
 
+interface Brochure {
+  url: string;
+  name: string;
+}
+
 interface ServiceItem {
   id?: string;
   title: string;
@@ -92,8 +97,7 @@ interface ServiceItem {
   images: string[];
   thumbnail?: string | null;
   layout?: unknown[] | null;
-  brochureUrl?: string | null;
-  brochureName?: string | null;
+  brochures?: Brochure[];
 }
 
 export function ServicesGrid({ services }: { services: ServiceItem[] }) {
@@ -129,18 +133,32 @@ export function ServicesGrid({ services }: { services: ServiceItem[] }) {
                   <IconComp size={24} />
                 </div>
 
-                {/* Download brochure button */}
-                {service.brochureUrl && (
-                  <a
-                    href={service.brochureUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    title={service.brochureName || "Download PDF"}
-                    className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-brand-primary shadow-lg hover:bg-white hover:scale-110 transition-all"
-                  >
-                    <FileDown size={18} />
-                  </a>
+                {/* Download brochure button — single PDF downloads directly, multiple opens the popup to choose */}
+                {service.brochures && service.brochures.length > 0 && (
+                  service.brochures.length === 1 ? (
+                    <a
+                      href={service.brochures[0].url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      title={service.brochures[0].name || "Download PDF"}
+                      className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-brand-primary shadow-lg hover:bg-white hover:scale-110 transition-all"
+                    >
+                      <FileDown size={18} />
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelected({ ...service, resolvedImage: image });
+                      }}
+                      title={`${service.brochures.length} PDF documents`}
+                      className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-brand-primary shadow-lg hover:bg-white hover:scale-110 transition-all"
+                    >
+                      <FileDown size={18} />
+                    </button>
+                  )
                 )}
               </div>
 
@@ -178,8 +196,7 @@ export function ServicesGrid({ services }: { services: ServiceItem[] }) {
           images: selected.images.length > 0 ? selected.images : [selected.resolvedImage],
           thumbnail: selected.thumbnail || null,
           layout: selected.layout,
-          brochureUrl: selected.brochureUrl || null,
-          brochureName: selected.brochureName || null,
+          brochures: selected.brochures || [],
         } : null}
         onClose={() => setSelected(null)}
       />

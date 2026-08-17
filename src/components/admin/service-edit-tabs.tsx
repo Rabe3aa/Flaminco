@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ServiceForm } from "./service-form";
 import { PageBuilder } from "./page-builder/page-builder";
 import type { Block } from "@/lib/page-builder/types";
+import type { UploadedFile } from "./file-uploader";
 
 interface ServiceEditTabsProps {
   initialData: {
@@ -12,8 +13,7 @@ interface ServiceEditTabsProps {
     icon: string;
     images: string;
     thumbnail: string;
-    brochureUrl: string;
-    brochureName: string;
+    brochures: UploadedFile[];
     order: number;
     published: boolean;
   };

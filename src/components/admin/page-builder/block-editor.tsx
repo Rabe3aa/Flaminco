@@ -331,9 +331,9 @@ function ColumnEditor({
 }
 
 function FileEditor({ block, onChange }: { block: FileBlock; onChange: (b: Block) => void }) {
-  const value: UploadedFile | null = block.data.url
-    ? { url: block.data.url, name: block.data.fileName || block.data.url.split("/").pop() || "Document.pdf" }
-    : null;
+  const value: UploadedFile[] = block.data.url
+    ? [{ url: block.data.url, name: block.data.fileName || block.data.url.split("/").pop() || "Document.pdf" }]
+    : [];
 
   return (
     <div className="space-y-3">
@@ -345,10 +345,10 @@ function FileEditor({ block, onChange }: { block: FileBlock; onChange: (b: Block
       />
       <FileUploader
         value={value}
-        onChange={(file) =>
+        onChange={(files) =>
           onChange({
             ...block,
-            data: { ...block.data, url: file?.url || "", fileName: file?.name || "" },
+            data: { ...block.data, url: files[0]?.url || "", fileName: files[0]?.name || "" },
           })
         }
       />

@@ -36,17 +36,17 @@ export async function createService(formData: FormData) {
   const icon = (formData.get("icon") as string) || null;
   const imagesRaw = formData.get("images") as string;
   const thumbnail = (formData.get("thumbnail") as string) || null;
-  const brochureUrl = (formData.get("brochureUrl") as string) || null;
-  const brochureName = (formData.get("brochureName") as string) || null;
+  const brochuresRaw = (formData.get("brochures") as string) || "[]";
   const order = parseInt((formData.get("order") as string) || "0", 10);
   const published = formData.get("published") === "on";
 
   const images = imagesRaw
     ? imagesRaw.split("\n").map((i: string) => i.trim()).filter(Boolean)
     : [];
+  const brochures = JSON.parse(brochuresRaw);
 
   await prisma.service.create({
-    data: { title, description, icon, images, thumbnail, brochureUrl, brochureName, order, published },
+    data: { title, description, icon, images, thumbnail, brochures, order, published },
   });
 
   revalidatePath("/services");
@@ -62,18 +62,18 @@ export async function updateService(id: string, formData: FormData) {
   const icon = (formData.get("icon") as string) || null;
   const imagesRaw = formData.get("images") as string;
   const thumbnail = (formData.get("thumbnail") as string) || null;
-  const brochureUrl = (formData.get("brochureUrl") as string) || null;
-  const brochureName = (formData.get("brochureName") as string) || null;
+  const brochuresRaw = (formData.get("brochures") as string) || "[]";
   const order = parseInt((formData.get("order") as string) || "0", 10);
   const published = formData.get("published") === "on";
 
   const images = imagesRaw
     ? imagesRaw.split("\n").map((i: string) => i.trim()).filter(Boolean)
     : [];
+  const brochures = JSON.parse(brochuresRaw);
 
   await prisma.service.update({
     where: { id },
-    data: { title, description, icon, images, thumbnail, brochureUrl, brochureName, order, published },
+    data: { title, description, icon, images, thumbnail, brochures, order, published },
   });
 
   revalidatePath("/services");

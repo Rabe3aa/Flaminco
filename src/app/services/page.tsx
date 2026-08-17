@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ServicesGrid } from "@/components/layout/services-grid";
 import { Reveal } from "@/components/ui/reveal";
 import { prisma } from "@/lib/prisma";
+import type { UploadedFile } from "@/components/admin/file-uploader";
 
 export const revalidate = 3600;
 
@@ -19,8 +20,7 @@ export default async function ServicesPage() {
     images: s.images,
     thumbnail: (s as unknown as { thumbnail?: string | null }).thumbnail || null,
     layout: s.layout as unknown[] | null,
-    brochureUrl: s.brochureUrl || null,
-    brochureName: s.brochureName || null,
+    brochures: (Array.isArray(s.brochures) ? s.brochures : []) as unknown as UploadedFile[],
   }));
 
   return (

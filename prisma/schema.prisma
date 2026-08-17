@@ -59,19 +59,18 @@ model Blog {
 }
 
 model Service {
-  id            String   @id @default(cuid())
-  title         String
-  description   String?
-  icon          String?
-  images        String[]
-  thumbnail     String?
-  layout        Json?
-  brochureUrl   String?
-  brochureName  String?
-  order         Int      @default(0)
-  published     Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  icon        String?
+  images      String[]
+  thumbnail   String?
+  layout      Json?
+  brochures   Json?
+  order       Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model TeamMember {
