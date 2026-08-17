@@ -7,13 +7,56 @@ import { X, ChevronLeft, ChevronRight, ZoomIn, FileText, Download } from "lucide
 import type { Block, HeadingBlock, TextBlock, ImageBlock, GalleryBlock, SpacerBlock, BannerBlock, TwoColumnsBlock, QuoteBlock, FileBlock } from "@/lib/page-builder/types";
 
 export function BlockRenderer({ blocks }: { blocks: Block[] }) {
+  const groups = groupImageBlocks(blocks);
   return (
     <div className="space-y-0">
-      {blocks.map((block) => (
-        <RenderBlock key={block.id} block={block} />
-      ))}
+      {groups.map((group) =>
+        group.type === "image-group" ? (
+          <RenderImageGroup key={group.blocks[0].id} blocks={group.blocks} />
+        ) : (
+          <RenderBlock key={group.block.id} block={group.block} />
+        )
+      )}
     </div>
   );
+}
+
+// Deterministic pseudo-random pick (stable between server render and client
+// hydration — Math.random() would mismatch) so roughly 1-in-3 cards render
+// double-width, scattered without a repeating per-row pattern.
+function isWideCard(seed: string): boolean {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  return h % 3 === 0;
+}
+
+type GroupedBlock =
+  | { type: "single"; block: Block }
+  | { type: "image-group"; blocks: ImageBlock[] };
+
+// Runs of 2+ consecutive "image" blocks (the common case when many photos are
+// added one at a time in the page builder) render as one card grid instead of
+// stacking full-width — a lone image block still gets its full-width hero treatment.
+function groupImageBlocks(blocks: Block[]): GroupedBlock[] {
+  const result: GroupedBlock[] = [];
+  let i = 0;
+  while (i < blocks.length) {
+    const block = blocks[i];
+    if (block.type === "image") {
+      const run: ImageBlock[] = [block];
+      let j = i + 1;
+      while (j < blocks.length && blocks[j].type === "image") {
+        run.push(blocks[j] as ImageBlock);
+        j++;
+      }
+      result.push(run.length >= 2 ? { type: "image-group", blocks: run } : { type: "single", block });
+      i = j;
+    } else {
+      result.push({ type: "single", block });
+      i++;
+    }
+  }
+  return result;
 }
 
 function Lightbox({ images, index, onClose }: { images: string[]; index: number; onClose: () => void }) {
@@ -184,6 +227,54 @@ function RenderImage({ block }: { block: ImageBlock }) {
   );
 }
 
+function RenderImageGroup({ blocks }: { blocks: ImageBlock[] }) {
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const valid = blocks.filter((b) => b.data.src);
+
+  if (valid.length === 0) return null;
+
+  const srcs = valid.map((b) => b.data.src);
+
+  return (
+    <>
+      <div className="container mx-auto px-4 md:px-8 py-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 auto-rows-[180px] sm:auto-rows-[220px] lg:auto-rows-[260px] [grid-auto-flow:dense] gap-4 md:gap-6">
+          {valid.map((block, i) => {
+            const wide = valid.length > 1 && isWideCard(block.id);
+            return (
+              <div
+                key={block.id}
+                className={`relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group cursor-zoom-in ${
+                  wide ? "col-span-2" : "col-span-1"
+                }`}
+                onClick={() => setLightbox(i)}
+              >
+                <Image
+                  src={block.data.src}
+                  alt={block.data.alt || ""}
+                  fill
+                  sizes={wide ? "(max-width: 640px) 100vw, 66vw" : "(max-width: 640px) 50vw, 33vw"}
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 pointer-events-none" />
+                <div className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <ZoomIn size={16} />
+                </div>
+                {block.data.caption && (
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-4 py-3 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <p className="text-white text-sm font-medium truncate">{block.data.caption}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {lightbox !== null && <Lightbox images={srcs} index={lightbox} onClose={() => setLightbox(null)} />}
+    </>
+  );
+}
+
 function RenderGallery({ block }: { block: GalleryBlock }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
 
@@ -205,19 +296,19 @@ function RenderGallery({ block }: { block: GalleryBlock }) {
           {block.data.images.map((img, i) => (
             <div
               key={i}
-              className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm group cursor-zoom-in"
+              className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group cursor-zoom-in"
               onClick={() => setLightbox(i)}
             >
               <Image
                 src={img.src}
                 alt={img.alt || `Image ${i + 1}`}
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                <div className="w-10 h-10 rounded-full bg-white/0 group-hover:bg-white/90 flex items-center justify-center text-brand-primary opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
-                  <ZoomIn size={18} />
-                </div>
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 pointer-events-none" />
+              <div className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <ZoomIn size={16} />
               </div>
             </div>
           ))}
