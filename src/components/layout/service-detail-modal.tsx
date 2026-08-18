@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { X, ChevronLeft, ChevronRight, ZoomIn, FileDown } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ZoomIn, FileText, Download } from "lucide-react";
 import { BlockRenderer } from "./block-renderer";
 import type { Block } from "@/lib/page-builder/types";
 import Image from "next/image";
@@ -189,24 +189,35 @@ export function ServiceDetailModal({
 
               {/* Brochure downloads */}
               {service.brochures && service.brochures.length > 0 && (
-                <div className="flex flex-col gap-3">
-                  {service.brochures.map((brochure, i) => (
-                    <a
-                      key={`${brochure.url}-${i}`}
-                      href={brochure.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-4 max-w-md w-full sm:w-auto px-5 py-4 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/20 rounded-2xl transition-all group"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center shrink-0">
-                        <FileDown size={18} className="text-white" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-brand-primary">Download Brochure</p>
-                        <p className="text-xs text-brand-neutral/50 truncate">{brochure.name}</p>
-                      </div>
-                    </a>
-                  ))}
+                <div>
+                  <h3 className="text-[11px] font-bold text-brand-neutral/40 uppercase tracking-widest mb-3">
+                    {service.brochures.length > 1 ? "Brochures & Catalogues" : "Brochure"}
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {service.brochures.map((brochure, i) => {
+                      const label = brochure.name.replace(/\.pdf$/i, "");
+                      return (
+                        <a
+                          key={`${brochure.url}-${i}`}
+                          href={brochure.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center gap-3 p-4 bg-white border border-brand-neutral/10 rounded-2xl shadow-sm hover:shadow-lg hover:border-brand-primary/30 hover:-translate-y-0.5 transition-all duration-300"
+                        >
+                          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-primary to-[#0072BB] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                            <FileText size={18} className="text-white" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-brand-primary truncate">{label}</p>
+                            <p className="text-xs text-brand-neutral/40 mt-0.5">PDF Document</p>
+                          </div>
+                          <div className="w-8 h-8 rounded-full bg-brand-primary/5 flex items-center justify-center shrink-0 text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-colors duration-300">
+                            <Download size={14} />
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
