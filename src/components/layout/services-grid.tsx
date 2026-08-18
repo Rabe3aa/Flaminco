@@ -132,34 +132,6 @@ export function ServicesGrid({ services }: { services: ServiceItem[] }) {
                 <div className={`absolute -bottom-6 right-8 w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md bg-white/90 z-10 ${color} group-hover:-translate-y-2 transition-transform duration-300`}>
                   <IconComp size={24} />
                 </div>
-
-                {/* Download brochure button — single PDF downloads directly, multiple opens the popup to choose */}
-                {service.brochures && service.brochures.length > 0 && (
-                  service.brochures.length === 1 ? (
-                    <a
-                      href={service.brochures[0].url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      title={service.brochures[0].name || "Download PDF"}
-                      className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-brand-primary shadow-lg hover:bg-white hover:scale-110 transition-all"
-                    >
-                      <FileDown size={18} />
-                    </a>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelected({ ...service, resolvedImage: image });
-                      }}
-                      title={`${service.brochures.length} PDF documents`}
-                      className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-brand-primary shadow-lg hover:bg-white hover:scale-110 transition-all"
-                    >
-                      <FileDown size={18} />
-                    </button>
-                  )
-                )}
               </div>
 
               {/* Content Section (Bottom Half) */}
@@ -174,12 +146,33 @@ export function ServicesGrid({ services }: { services: ServiceItem[] }) {
                 {/* Subtle decorative line */}
                 <div className="w-full h-px bg-brand-neutral/10 my-4" />
 
-                <Link href="/contact" className="inline-flex items-center justify-between w-full text-sm font-bold text-brand-primary group/btn mt-auto">
-                  <span>Contact us</span>
-                  <div className="w-8 h-8 rounded-full bg-brand-primary/5 flex items-center justify-center group-hover/btn:bg-brand-primary group-hover/btn:text-white transition-colors">
-                    <ArrowRight size={14} className="group-hover/btn:translate-x-0.5 transition-transform" />
-                  </div>
-                </Link>
+                <div className="flex items-center justify-between gap-3 mt-auto">
+                  <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-bold text-brand-primary group/btn shrink-0">
+                    <span>Contact us</span>
+                    <div className="w-8 h-8 rounded-full bg-brand-primary/5 flex items-center justify-center group-hover/btn:bg-brand-primary group-hover/btn:text-white transition-colors">
+                      <ArrowRight size={14} className="group-hover/btn:translate-x-0.5 transition-transform" />
+                    </div>
+                  </Link>
+
+                  {/* One download button per attached PDF brochure */}
+                  {service.brochures && service.brochures.length > 0 && (
+                    <div className="flex items-center flex-wrap justify-end gap-2">
+                      {service.brochures.map((brochure, i) => (
+                        <a
+                          key={`${brochure.url}-${i}`}
+                          href={brochure.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          title={brochure.name || `Download PDF ${i + 1}`}
+                          className="w-8 h-8 rounded-full bg-brand-primary/5 text-brand-primary hover:bg-brand-primary hover:text-white flex items-center justify-center transition-colors shrink-0"
+                        >
+                          <FileDown size={14} />
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           );
